@@ -16,5 +16,17 @@ public class Comprador {
     public Endereco getEndereco() {
 		return endereco;
 	}
+  public void setCpf(String cpf) {
+		this.cpf = cpf;
+	}
+  public void setNome(String nome) {
+		this.nome = nome;
+	}
+  public void setTelefone(int telefone) {
+		this.telefone = telefone;
+	}
+  public void setEndereco(Endereco endereco) {
+		this.endereco = endereco;
+	}
 
 }
