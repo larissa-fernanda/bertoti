@@ -1,12 +1,9 @@
-import java.util.LinkedList;
-import java.util.List;
-
 public class Sabor {
     private String massa;
     private String recheio;
     private String cobertura;
-    private List <String> adicionais = new LinkedList<String>();    
-
+    private String adicional;
+    
     public String getMassa(){
         return massa;
     }
@@ -20,27 +17,22 @@ public class Sabor {
     }
 
     public void setMassa(String massa) {
-		this.massa = massa;
-	}
+        this.massa = massa;
+    }
 
     public void setRecheio(String recheio) {
-		this.recheio = recheio;
-	}
+        this.recheio = recheio;
+    }
 
     public void setCobertura(String cobertura) {
-		this.cobertura = cobertura;
-	}
+        this.cobertura = cobertura;
+    }
 
     public void setAdicional(String adicional) {
-		adicionais.add(adicional);
-	}
+        this.adicional = adicional;
+    }
 
     public String getAdicional() {
-		return adicional;
-	}
-
-
-
-
-
+        return adicional;
+    }
 }
