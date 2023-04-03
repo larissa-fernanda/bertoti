@@ -20,9 +20,20 @@ public class Bolo {
     public double getPreco() {
 		return preco;
 	}
+  public void setId(int id) {
+		this.id = id;
+	}
+    public void setLote(int lote) {
+		this.lote = lote;
+	}
+    public void setSabor(Sabor sabor) {
+		this.sabor = sabor;
+	}
+    public void setPeso(double peso) {
+		this.peso =  peso;
+	}
+    public void setPreco(double preco) {
+		this.preco = preco;
+	}
 
-
-    public static void main(String[] args) throws Exception {
-        System.out.println("Hello, World!");
-    }
 }
