@@ -1,5 +1,6 @@
-package com.mycompany.lojabolos;
 
+
+import com.mycompany.lojabolos.Bolo;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
