@@ -4,7 +4,6 @@
  */
 package com.mycompany.lojabolos;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -46,6 +45,6 @@ public class Cliente {
     }
 
     public void addPedido(Pedido pedido) {
-        pedidos.add(pedido);
+        this.pedidos.add(pedido);
     }
 }

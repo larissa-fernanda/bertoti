@@ -37,7 +37,7 @@ public class Pedido {
     }
 
     public void addBolo(Bolo bolo) {
-        bolos.add(bolo);
+        this.bolos.add(bolo);
     }
 
     public double calcularValorTotal() {
