@@ -3,29 +3,28 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 
-
 /**
  *
  * @author larissa
  */
-
 import com.mycompany.lojabolos.Bolo;
-import com.mycompany.lojabolos.Cliente;
 import com.mycompany.lojabolos.Pedido;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import org.junit.Before;
 import org.junit.Test;
 
 public class PedidoTest {
+
     private Pedido pedido;
-    private Cliente cliente;
     private Bolo bolo1, bolo2;
-    
+
     @Before
-    public void setUp() {        
+    public void setUp() {
         // Cria dois bolos
         bolo1 = new Bolo();
         bolo1.setSabor("Chocolate");
@@ -33,32 +32,57 @@ public class PedidoTest {
         bolo1.setPreco(30.0);
         String[] ingredientes1 = {"chocolate", "leite condensado", "morango"};
         bolo1.setIngredientes(ingredientes1);
-        
+
         bolo2 = new Bolo();
         bolo2.setSabor("Morango");
         bolo2.setTamanho("Pequeno");
         bolo2.setPreco(20.0);
         String[] ingredientes2 = {"morango", "chantilly"};
         bolo2.setIngredientes(ingredientes2);
-        
+
         // Adiciona os dois bolos à lista de bolos do pedido
         List<Bolo> bolos = new ArrayList<>();
         bolos.add(bolo1);
         bolos.add(bolo2);
-        
+
         // Cria um novo pedido
         pedido = new Pedido();
         pedido.setData(new Date());
         pedido.addBolo(bolo1);
         pedido.addBolo(bolo2);
     }
-    
+
     @Test
     public void testCalcularValorTotal() {
         // Calcula o valor total do pedido
         double valorTotal = pedido.calcularValorTotal();
-        
+
         // Verifica se o valor total está correto
         assertEquals(53.0, valorTotal, 0.01);
+    }
+
+    @Test
+    public void testAddBolo() {
+        Bolo bolo3 = new Bolo();
+        bolo3.setSabor("Baunilha");
+        bolo3.setTamanho("Grande");
+        bolo3.setPreco(40.0);
+        String[] ingredientes3 = {"baunilha", "leite condensado"};
+        bolo3.setIngredientes(ingredientes3);
+
+
+        pedido.addBolo(bolo3);
+
+        assertEquals(3, pedido.getBolos().size());
+    }
+
+    @Test
+    public void testGetData() {
+        assertNotNull(pedido.getData());
+    }
+
+    @Test
+    public void testGetBolos() {
+        assertFalse(pedido.getBolos().isEmpty());
     }
 }
