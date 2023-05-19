@@ -8,6 +8,7 @@ package com.mycompany.lojabolos;
  *
  * @author larissa
  */
+import java.util.ArrayList;
 import java.util.List;
 
 public class Cliente {
@@ -15,6 +16,10 @@ public class Cliente {
     private String endereco;
     private String telefone;
     private List<Pedido> pedidos;
+    
+    public Cliente() {
+        this.pedidos = new ArrayList<>();
+    }
 
     public String getNome() {
         return nome;

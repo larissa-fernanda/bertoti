@@ -8,12 +8,17 @@ package com.mycompany.lojabolos;
  *
  * @author larissa
  */
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 public class Pedido {
     private Date data;
     private List<Bolo> bolos;
+
+    public Pedido() {
+        this.bolos = new ArrayList<>();
+    }
 
     public Date getData() {
         return data;
