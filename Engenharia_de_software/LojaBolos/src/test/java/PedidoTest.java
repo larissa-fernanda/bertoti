@@ -1,4 +1,13 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 
+
+/**
+ *
+ * @author larissa
+ */
 
 import com.mycompany.lojabolos.Bolo;
 import com.mycompany.lojabolos.Cliente;
@@ -16,13 +25,7 @@ public class PedidoTest {
     private Bolo bolo1, bolo2;
     
     @Before
-    public void setUp() {
-        // Cria um novo cliente
-        cliente = new Cliente();
-        cliente.setNome("João");
-        cliente.setEndereco("Rua A, 123");
-        cliente.setTelefone("(11) 1234-5678");
-        
+    public void setUp() {        
         // Cria dois bolos
         bolo1 = new Bolo();
         bolo1.setSabor("Chocolate");
@@ -45,7 +48,6 @@ public class PedidoTest {
         
         // Cria um novo pedido
         pedido = new Pedido();
-        pedido.setCliente(cliente);
         pedido.setData(new Date());
         pedido.addBolo(bolo1);
         pedido.addBolo(bolo2);
