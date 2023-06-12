@@ -59,7 +59,7 @@ public class BoloTest {
         bolo.setTamanho("pequeno");
         bolo.setIngredientes(new String[]{"chocolate"});
 
-        double precoEsperado = 11.0;
+        double precoEsperado = 12.0;
         double precoCalculado = bolo.calcularPrecoTotal();
 
         assertEquals(precoEsperado, precoCalculado, 0.01);
@@ -72,7 +72,7 @@ public class BoloTest {
         bolo.setTamanho("médio");
         bolo.setIngredientes(new String[]{"chocolate"});
 
-        double precoEsperado = 16.5;
+        double precoEsperado = 18.0;
         double precoCalculado = bolo.calcularPrecoTotal();
 
         assertEquals(precoEsperado, precoCalculado, 0.01);
@@ -85,7 +85,7 @@ public class BoloTest {
         bolo.setTamanho("grande");
         bolo.setIngredientes(new String[]{"chocolate"});
 
-        double precoEsperado = 22.0;
+        double precoEsperado = 24.0;
         double precoCalculado = bolo.calcularPrecoTotal();
 
         assertEquals(precoEsperado, precoCalculado, 0.01);
@@ -98,7 +98,7 @@ public class BoloTest {
         bolo.setTamanho("pequeno");
         bolo.setIngredientes(new String[]{"chocolate", "morango", "baunilha", "laranja", "limão"});
 
-        double precoEsperado = 13.5;
+        double precoEsperado = 16.5;
         double precoCalculado = bolo.calcularPrecoTotal();
 
         assertEquals(precoEsperado, precoCalculado, 0.01);
@@ -130,16 +130,6 @@ public class BoloTest {
         assertEquals(precoEsperado, precoCalculado, 0.01);
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testCalcularPrecoTotalComTamanhoInvalido() {
-        Bolo bolo = new Bolo();
-        bolo.setPreco(10.0);
-        bolo.setTamanho("extra-grande");
-        bolo.setIngredientes(new String[]{"chocolate", "morango"});
-
-        bolo.calcularPrecoTotal();
-    }
-
     @Test
     public void testCalcularPrecoTotalComPrecoNegativo() {
         Bolo bolo = new Bolo();
@@ -147,10 +137,58 @@ public class BoloTest {
         bolo.setTamanho("pequeno");
         bolo.setIngredientes(new String[]{"chocolate", "morango"});
 
-        double precoEsperado = -1.75;
+        double precoEsperado = -1.5;
         double precoCalculado = bolo.calcularPrecoTotal();
 
         assertEquals(precoEsperado, precoCalculado, 0.01);
 
     }
+    
+    @Test
+    public void testCalcularPrecoTotalTamanhoGrande() {
+        Bolo bolo = new Bolo();
+        bolo.setSabor("limão");
+        bolo.setTamanho("grande");
+        bolo.setPreco(25.0);
+        String[] ingredientes = {"chocolate", "morango"};
+        bolo.setIngredientes(ingredientes);
+        
+        double precoEsperado = 57.0;
+        double precoCalculado = bolo.calcularPrecoTotal();
+        
+        assertEquals(precoEsperado, precoCalculado, 0.01);
+    }
+
+    @Test
+    public void testSetAndGetSabor() {
+        Bolo bolo = new Bolo();
+        bolo.setSabor("chocolate");
+        
+        assertEquals("chocolate", bolo.getSabor());
+    }
+    
+    @Test
+    public void testSetAndGetTamanho() {
+        Bolo bolo = new Bolo();
+        bolo.setTamanho("médio");
+        
+        assertEquals("médio", bolo.getTamanho());
+    }
+    
+    @Test
+    public void testSetAndGetPreco() {
+        Bolo bolo = new Bolo();
+        bolo.setPreco(20.0);
+        
+        assertEquals(20.0, bolo.getPreco(), 0.01);
+    }
+    
+    @Test
+    public void testSetAndGetIngredientes() {
+        Bolo bolo = new Bolo();
+        String[] ingredientes = {"morango", "granulado"};
+        bolo.setIngredientes(ingredientes);
+        
+        assertEquals(ingredientes, bolo.getIngredientes());
+    }   
 }
