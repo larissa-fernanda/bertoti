@@ -4,14 +4,29 @@
  */
 package com.mycompany.lojabolos;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author larissa
  */
 public class LojaBolos {
+    private List<Cliente> clientes;
 
-    public static void main(String[] args) {
-        System.out.println("Hello World!");
-        
+    public LojaBolos() {
+        this.clientes = new ArrayList<>();
+    }
+
+    public List<Cliente> getClientes() {
+        return clientes;
+    }
+
+    public void addCliente(Cliente cliente) {
+        this.clientes.add(cliente);
+    }
+
+    public void removeCliente(Cliente cliente) {
+        this.clientes.remove(cliente);
     }
 }
