@@ -79,4 +79,26 @@ public class ClienteTest {
         cliente.addPedido(pedido2);
         assertEquals(2, cliente.getPedidos().size());
     }
+
+    @Test
+    public void testSetAndGetNome() {
+        Cliente cliente = new Cliente();
+        cliente.setNome("João");
+        assertEquals("João", cliente.getNome());
+    }
+
+    @Test
+    public void testSetAndGetEndereco() {
+        Cliente cliente = new Cliente();
+        cliente.setEndereco("Rua A, 123");
+        assertEquals("Rua A, 123", cliente.getEndereco());
+    }
+
+    @Test
+    public void testSetAndGetTelefone() {
+        Cliente cliente = new Cliente();
+        cliente.setTelefone("(11) 99999-9999");
+        assertEquals("(11) 99999-9999", cliente.getTelefone());
+    }
+    
 }
