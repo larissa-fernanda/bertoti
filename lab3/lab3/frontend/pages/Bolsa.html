@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../styles/Bolsa.styles.css">
+    <link rel="stylesheet" href="../styles/Utils.styles.css">
+    <link rel="shortcut icon" href="../assets/logo2rp.svg" type="image/x-icon">
+    <title>Bolsa</title>
+</head>
+
+<body>
+    <div class="container">
+        
+        <div class="menu">
+
+            <div class="logo">
+                <img src="https://deliriumnerd.com/wp-content/uploads/2023/05/OIP-3-1.jpg" alt="Edward">
+            </div>
+
+            <ul class="main-menu">
+                <li class="menu-item">
+                    <img src="../assets/pessoa.svg" alt="" srcset="">
+                    <a href="./Pessoa.html">Pessoas</a>
+                </li>
+                <li class="menu-item ">
+                    <img src="../assets/vampire.svg" alt="" srcset="">
+                    <a href="./Bolsa.html">Bolsas</a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="main-content">
+            
+            <div class="header">
+                <h1>Gerenciamento de Bolsas</h1>
+                <div class="user-content">
+                    <img src="" alt=""
+                        srcset="https://img.quizur.com/f/img613926608e6117.71871787.jpg?lastEdited=1631135333" alt="Bella">
+                    <p>
+                        Bella Swan
+                    </p>
+                </div>
+            </div>
+
+            <div class="search-bar">
+                
+                <div class="content">
+                    <input class="input-search" type="text" name="" id="" placeholder="Pesquisar">
+
+                    <button class="add-pessoa">Adicionar Bolsa</button>
+                </div>
+            
+            </div>
+
+            <div class="columnName">
+                <ul>
+                    <li>Código</li>
+                    <li>Tipo Sanguíneo</li>
+                    <li>Data de Doação</li>
+                    <li>CPF</li>
+                    <li>Data de Saída</li>
+                </ul>
+            </div>
+
+            <div class="tabela">
+                <ul class="list-of-items">
+
+                </ul>
+            </div>
+
+        </div>
+
+
+    </div>
+    </div>
+
+
+    <div class="modal" id="myModal">
+        <div class="modal-container">
+            <div class="modal-content">
+                
+                <span class="close" id="closeModal">
+                    &times;
+                </span>
+                
+                <form action="">
+                    
+                    <div class="title-modal">
+                        Adicionar Bolsa
+                    </div>
+                    
+                    <div class="inputs">                        
+                        <div>
+                            Tipo Sanguíneo
+                            <input class="input-4" name="TipoSanguineo" type="text" placeholder="Tipo Sanguíneo">
+                        </div>
+                        
+                        <div>
+                            Data de Doação
+                            <input class="input-3" name="DataDoacao" type="text" placeholder="YYYY-MM-dd">
+                        </div>
+                        
+                        <div>
+                            CPF
+                            <input class="input-2" name="CPF" type="text" placeholder="CPF">
+                        </div>
+
+                        <div>
+                            Cidade
+                            <input class="input-1" name="Cidade" type="text" placeholder="Cidade">
+                        </div>
+                    </div>
+                    <div class="buttons">
+                        <button class="cancelar ">
+                            Cancelar
+                        </button>
+
+                        <button id="confirmar" class="confirmar">
+                            Confirmar
+                        </button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+
+    </div>
+
+    <!-- <div class="modal" id="myModalUpdate">
+        <div class="modal-container">
+            <div class="modal-content">
+                <span class="close" id="closeModal">&times;</span>
+                <form action="">
+                    <div class="rectangle-24"></div>
+                    <button class="cancelar ">
+                        cancelar
+                    </button>
+
+                    <div class="title-modal">Editar CR's</div>
+
+                    <input class="input-3" name="nomeUpdate" type="text">
+                    <input class="input-2" name="siglaUpdate" type="text">
+                    <input class="input-1" disabled name="codigoCrUpdate" type="text">
+                    <div class="nome-input">Nome</div>
+                    <div class="sigla-input">Sigla</div>
+                    <div class="codCr-input">Código do CR</div>
+                    <button id="confirmarCRUpdate" class="confirmar">Confirmar</button>
+                </form>
+
+
+
+
+
+            </div>
+        </div>
+
+    </div>
+
+
+
+
+    <div class="success-message" id="successMessage">
+        CR ADICIONADO COM SUCESSO
+    </div>
+
+    <div class="error-message" id="errorMessage">
+        Erro ao adicionar o CR.
+    </div> -->
+
+
+    <script type="module" src="../scripts/Bolsa.script.js"></script>
+
+</body>
+
+</html>
