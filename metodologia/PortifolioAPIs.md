@@ -36,21 +36,51 @@
 <p align="justify">A aplicação foi dividida em três perfis de usuários: colaborador, gestor e administrador.</p>
 
 
-<h3>Atuação</h3>
+<h3>Contribuições Individuais</h3>
 <p>Atuei como Scrum Master e desenvolvedora full-stack. A seguir, estão listadas as minhas contribuições para o projeto:</p>
 <ul>
 <details>
     <summary>Modelagem do banco de dados</summary>
     <p>Realizei a modelagem do banco de dados, utilizando o PostgreSQL. O banco de dados foi modelado de acordo com as necessidades da empresa parceira, contemplando as entidades e relacionamentos necessários para a aplicação.</p>
     <p>Nesse processo, fui responsável pela criação do DER (Diagrama de Entidade-Relacionamento) e pela criação dos scripts de criação das tabelas e relacionamentos.</p>
+    <image src="./assets/DER.png" alt="Diagrama de Entidade-Relacionamento">
 </details>
 
 <details>
-    <summary>Criação das rotas PATCH e DELETE da entidade User</summary>
-    <p>Criei as rotas PATCH e DELETE da entidade User, utilizando o framework Spring Boot. As rotas permitiam a atualização e inativação de um usuário, respectivamente.</p> 
+    <summary>Criação das rotas PATCH e DELETE da entidade Employee</summary>
+    <p>Criei as rotas PATCH e DELETE da entidade Employee, utilizando o framework Spring Boot. As rotas permitiam a atualização e inativação de um usuário, respectivamente.</p> 
     <p>Para a rota PATCH, foi necessário validar os dados enviados pelo usuário, garantindo que apenas os campos permitidos fossem atualizados.</p>
     <p>Para a rota DELETE, foi necessário realizar a inativação do usuário, alterando o status do usuário para inativo no banco de dados.</p>
     <p>Além disso, criei a rota para reativação do usuário.</p>
+    <pre>
+    <code>
+    @PatchMapping("/{matricula}")
+    public Employee updateEmployee(@PathVariable String matricula, @RequestBody EmployeeDTOs.EmployeeRequestDTO partialData) {
+        Employee employee = repository.findById(matricula).orElseThrow(
+            () -> new RuntimeException("Funcionário não encontrado com a matrícula: " + matricula)
+            );
+        try {
+            if (partialData.nome() != null) {
+                employee.setNome(partialData.nome());
+            }
+            if (partialData.senha() != null) {
+                employee.setSenha(partialData.senha());
+            }
+            if (partialData.funcao() != null) {
+                employee.setFuncao(partialData.funcao());
+            }
+            if (partialData.status_usuario() != null) {
+                employee.setStatus_usuario(partialData.status_usuario());
+            }
+        } catch (Exception e) {
+            throw new ApiException("Erro ao atualizar o funcionário: " + e.getMessage());
+        }
+
+        repository.save(employee);
+        return employee;
+    }
+
+</code></pre>
 </details>
 
 <details>
@@ -100,7 +130,7 @@
             <details><summary><strong>PATCH:</strong></summary>
             <li> O método PATCH é usado para realizar atualizações parciais em um recurso. Em vez de substituir o recurso inteiro, como ocorre com o método PUT, o PATCH permite enviar apenas as modificações que devem ser aplicadas ao recurso. No projeto, rotas PATCH foram implementadas para permitir a atualização de entidades como usuários e CRs (Centros de Resultados).</li></details>
             <details><summary><strong>DELETE:</strong></summary>
-            <li>O método DELETE é usado para excluir um recurso específico. Quando uma solicitação DELETE é enviada para o servidor, o recurso correspondente é removido permanentemente. No projeto, rotas DELETE foram utilizadas para permitir a exclusão de entidades como usuários e CRs.</li></details>
+            <li>O método DELETE é usado para excluir um recurso específico. Quando uma solicitação DELETE é enviada para o servidor, o recurso correspondente é removido permanentemente. No projeto, rotas DELETE foram utilizadas para permitir a inativação de entidades como usuários e CRs, excluindo-os do contexto de negócio.</li></details>
         </ul>
     </li></details>
     <details><summary><strong>Java e Spring Boot:</strong></summary>
@@ -116,3 +146,6 @@
 
 <h3>Soft Skills</h3>
 
+<details>
+    <summary></summary>
+</details>
