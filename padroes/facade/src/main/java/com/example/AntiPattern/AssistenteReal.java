@@ -42,4 +42,34 @@ public class AssistenteReal {
         this.lampadaLigada = false;
     }
 
+    public boolean isSoundbarLigado() {
+        return soundbarLigado;
+    }
+
+    public boolean isTelevisaoLigada() {
+        return televisaoLigada;
+    }
+
+    public boolean isLampadaLigada() {
+        return lampadaLigada;
+    }
+
+    public String getSoundbarComodo() {
+        return soundbarComodo;
+    }
+
+    public String getTelevisaoComodo() {
+        return televisaoComodo;
+    }
+
+    public String getLampadaComodo() {
+        return lampadaComodo;
+    }
+
+    public void getStatus() {
+        System.out.println("Soundbar da " + this.soundbarComodo + " está " + (this.soundbarLigado ? "ligado" : "desligado"));
+        System.out.println("Televisao da " + this.televisaoComodo + " está " + (this.televisaoLigada ? "ligada" : "desligada"));
+        System.out.println("Lâmpada da " + this.lampadaComodo + " está " + (this.lampadaLigada ? "ligada" : "desligada"));
+    }
+
 }
