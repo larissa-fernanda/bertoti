@@ -14,4 +14,12 @@ public class ExibirDetalhesMotoStrategy implements ExibirDetalhesStrategy{
         System.out.println("Ano: " + veiculo.getAno());
         System.out.println("Tem slide: " + (temSlide ? "Sim" : "Não"));
     }
+
+    public boolean isTemSlide() {
+        return this.temSlide;
+    }
+
+    public void setTemSlide(boolean temSlide) {
+        this.temSlide = temSlide;
+    }
 }

@@ -14,4 +14,12 @@ public class ExibirDetalhesCarroStrategy implements ExibirDetalhesStrategy{
         System.out.println("Ano: " + veiculo.getAno());
         System.out.println("Número de portas: " + numeroDePortas);
     }
+
+    public int getNumeroDePortas() {
+        return this.numeroDePortas;
+    }
+
+    public void setNumeroDePortas(int numeroDePortas) {
+        this.numeroDePortas = numeroDePortas;
+    }
 }
