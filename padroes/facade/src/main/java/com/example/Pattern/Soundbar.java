@@ -9,17 +9,17 @@ public class Soundbar {
     }
 
     public void ligar() {
-        System.out.println("Soundbar da " + this.comodo + "ligado");
+        System.out.println("Soundbar da " + this.comodo + " ligado");
         this.ligada = true;
     }
 
     public void desligar() {
-        System.out.println("Soundbar da " + this.comodo + "desligado");
+        System.out.println("Soundbar da " + this.comodo + " desligado");
         this.ligada = false;
     }
 
     public void mostrarStatus() {
-        System.out.println("Soundbar da " + this.comodo + "está " + (this.ligada ? "ligado" : "desligado"));
+        System.out.println("Soundbar da " + this.comodo + "está " + (this.ligada ? " ligado" : " desligado"));
     }
 
 }

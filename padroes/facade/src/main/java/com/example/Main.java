@@ -1,9 +1,6 @@
 package com.example;
 
-import com.example.AntiPattern.Lampada;
-import com.example.AntiPattern.Soundbar;
-import com.example.AntiPattern.Televisao;
-
+import com.example.AntiPattern.AssistenteReal;
 import com.example.Pattern.Lampada;
 import com.example.Pattern.Soundbar;
 import com.example.Pattern.Televisao;
@@ -14,16 +11,18 @@ public class Main {
         System.out.println("Hello world!");
 
         // AntiPattern
-        Lampada antiLampada = new Lampada();
-        antiLampada.ligar();
-        antiLampada.desligar();
+        AssistenteReal assistenteReal = new AssistenteReal("Sala", "Sala", "Sala");
+        assistenteReal.ligarSoundbar();
+        assistenteReal.ligarTelevisao();
+        assistenteReal.ligarLampada();
+        assistenteReal.desligarSoundbar();
+        assistenteReal.desligarTelevisao();
+        assistenteReal.desligarLampada();
 
+        System.out.println("====================================");
         // Pattern
-        com.example.Pattern.Lampada patlampada = new com.example.Pattern.Lampada();
-        com.example.Pattern.Soundbar patSoundbar = new com.example.Pattern.Soundbar();
-        com.example.Pattern.Televisao patTelevisao = new com.example.Pattern.Televisao();
 
-        AssistenteVirtual assistente = new AssistenteVirtual(patlampada, patSoundbar, patTelevisao);
+        AssistenteVirtual assistente = new AssistenteVirtual("Quarto");
 
         assistente.ouvirMusica();
 

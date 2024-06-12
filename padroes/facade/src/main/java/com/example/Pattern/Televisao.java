@@ -9,17 +9,17 @@ public class Televisao {
     }
 
     public void ligar() {
-        System.out.println("Televisao da " + this.comodo + "ligada");
+        System.out.println("Televisao da " + this.comodo + " ligada");
         this.ligada = true;
     }
 
     public void desligar() {
-        System.out.println("Televisao da " + this.comodo + "desligada");
+        System.out.println("Televisao da " + this.comodo + " desligada");
         this.ligada = false;
     }
 
     public void mostrarStatus() {
-        System.out.println("Televisao da " + this.comodo + "está " + (this.ligada ? "ligada" : "desligada"));
+        System.out.println("Televisao da " + this.comodo + "está " + (this.ligada ? " ligada" : " desligada"));
     }
 
 }
