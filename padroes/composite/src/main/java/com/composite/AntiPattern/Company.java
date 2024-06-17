@@ -28,4 +28,15 @@ public class Company {
         teams.remove(team);
     }
 
+    public void showDetails() {
+        System.out.println("Empresa: " + name);
+        System.out.println("Funcionários: ");
+        for (Employee employee : employees) {
+            employee.showDetails();
+        }
+        System.out.println("Times: ");
+        for (AntiTeam team : teams) {
+            team.showDetails();
+        }
+    }
 }
