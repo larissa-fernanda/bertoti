@@ -1,11 +1,12 @@
 package com.composite.AntiPattern;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Company {
     private String name;
-    private List<Employee> employees;
-    private List<AntiTeam> teams;
+    private List<Employee> employees = new ArrayList<>();
+    private List<AntiTeam> teams = new ArrayList<>();
 
     public Company(String name) {
         this.name = name;
