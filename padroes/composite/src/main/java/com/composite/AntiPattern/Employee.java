@@ -4,8 +4,11 @@ public class Employee {
     private String name;
     private String position;
 
-    public Employee(String name, String position) {
+    public Employee(String name) {
         this.name = name;
+    }
+
+    public void setPosition(String position) {
         this.position = position;
     }
 
