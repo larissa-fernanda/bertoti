@@ -20,7 +20,937 @@
 
 <h1 id="projetos">Projetos</h1>
 <ul>
+    <li><a href="#api1">Projeto 1: Sistema de avaliação 360º</a></li>
     <li><a href="#api3">Projeto 3: Sistema de lançamento de horas-extras e sobreavisos</a></li>
+</ul>
+
+<h2 id="api1">Sistema de avaliação 360º</h2>
+
+<h3>Descrição</h3>
+
+<p align="justify">Este projeto foi desenvolvido tendo como cliente a própria FATEC São José dos Campos. O objetivo era criar uma aplicação que permitisse que um time ágil de desenvolvimento dentro da instituição pudesse avaliar o desempenho de seus membros em um processo de avaliação 360º. A aplicação foi desenvolvida em Python, exclusivamente pelo terminal e sem banco de dados.</p>
+
+<p align="justify">O sistema era composto por três categorias de usuários: adminitradores, instrutores e alunos. Além disso, o sistema era divido em turmas, que eram formadas por alunos e instrutores. Para cada turma, um instrutor poderia atuar como Fake Client ou como Group Leader. Dentro de uma mesma turma, os alunos eram divididos em times, que eram formados por um Líder Técnico, um Product Owner e membros do time.</p>
+
+<p align="justify">Na hora da avaliação, um membro do time avaliava os outros membros, respondendo a cinco perguntas, cada uma com cinco opções de resposta. As respostas eram armazenadas em um arquivo de texto, permitindo a geração de relatórios com base nas avaliações realizadas. Um instrutor podia visualizar as avaliações de um aluno e gerar um relatório com as médias das avaliações. Além disso, um instrutor do tipo Fake Client tinha que avaliar seus alunos P.O. e um instrutor do tipo Group Leader tinha que avaliar seus alunos L.T.</p>
+
+<h3>Contribuições Individuais</h3>
+
+Atuei como desenvolvedora full-stack. A seguir, estão listadas as minhas contribuições para o projeto:
+
+<ul>
+    <details>
+        <summary>Desenvolvimento de funções para validação do nome de usuário e nome de time</summary>
+        <p align="justify">Criei as funções iniciais de validação do nome de usuário e nome de time, garantindo que o nome informado pelo usuário atendesse aos critérios estabelecidos. As funções verificavam se o nome era válido, ou seja, se continha apenas letras e underlines, se não começava com números e se tinha mais de dois caracteres. Para isso, usei expressões regulares.</p>
+        <pre>
+        <code>
+        def has_name_valid_characters(name):
+            "Verifica se tem caracteres especiais."
+            return re.match("^[a-zA-Z0-9_-]+$", name)
+
+        def is_name_valid(name, show=False):
+            """
+            Retorna True ou False. Verifica se o nome é valido ou não.
+            Validações:
+                - deve conter mais de 2 caracteres
+                - não pode começar com número
+                - não pode conter caracteres especiais, exceto underline "_"
+            """
+            if len(name) <= 2:
+                if show == True:
+                    print('O nome deve ter mais de 2 caracteres. Tente novamente!')
+                return False
+            elif not has_name_valid_characters(name):
+                if show == True:
+                    print('Formato inválido. Tente novamente!')
+                return False
+            elif re.match('\d', name[0]):
+                if show == True:
+                    print('Nomes não podem começar com número')
+                return False
+            else:
+                return True
+
+        def prompt_for_valid_username():
+            """
+            Loop pedindo para o usuário inserir o nome caso
+            o nome seja inválido.
+            """
+            input_name = input('Digite o nome:')
+
+            while not is_name_valid(input_name):
+                input_name = input('Digite um nome válido:')
+
+            return input_name
+
+        def prompt_for_valid_team_name():
+            input_team_name = input('Digite o nome do time: ')
+
+            while not is_name_valid(input_team_name):
+                input_team_name = input('Digite um nome válido para o time: ')
+
+            return input_team_name
+
+</code></pre> 
+    </details>
+    <details>
+        <summary>Desenvolvimento de funções para validação do email</summary>
+        <p align="justify">Criei as funções iniciais de validação do email, garantindo que o email informado pelo usuário atendesse aos critérios estabelecidos. As funções verificavam se o email era válido, ou seja, se continha um "@" e um ".". Para isso, usei expressões regulares.</p>
+        <pre>
+        <code>
+        def is_email_valid(email):
+            return re.match('^[a-z0-9.]+@[a-z0-9]+\.[a-z]+(\.[a-z]+)?$', email)
+
+
+        def prompt_for_valid_email():
+            input_email = input('Digite o email: ')
+
+            while not is_email_valid(input_email):
+                print('E-mail inválido. Digite novamente!')
+                input_email = input('Digite o e-mail: ')
+
+            return input_email
+</code></pre>
+    </details>
+    <details>
+        <summary>Desenvolvimento de funções para validação da senha</summary>
+        <p align="justify">Criei as funções iniciais de validação da senha, garantindo que a senha informada pelo usuário atendesse aos critérios estabelecidos. As funções verificavam se a senha era válida, ou seja, se continha pelo menos 8 caracteres, um número, uma letra maiúscula, uma letra minúscula e um caracter especial. Para isso, usei expressões regulares.</p>
+        <pre>
+        <code>
+        def is_password_valid(password, show=False):
+            """
+            Retorna True ou False. Verifica se a senha é valida ou não.
+            Validações:
+                - deve conter mais de 8 caracteres
+                - deve conter pelo menos 1 letra maiúscula
+                - deve conter pelo menos 1 letra minúscula
+                - deve conter pelo menos 1 número
+                - deve conter pelo menos 1 carácter especial (@!%*?&)    
+            """
+            if len(password) < 8:
+                if show == True:
+                    print('A senha deve ter mais de 8 caracteres.')
+                return False
+            elif not has_password_valid_characters(password):
+                if show == True:
+                    print('Formato inválido!')
+                return False
+            else:
+                return True
+
+        def prompt_for_valid_password(show = False):
+            """
+            Loop pedindo para o usuário inserir a senha caso
+            ela seja inválida.
+            """
+            if show == True:
+                print('Sua senha deve conter:\n- No mínimo 8 caracteres\n- No mínimo 1 letra maiúscula\n- No mínimo 1 letra minúscula\n- No mínimo 1 número\n- No mínimo 1 carácter especial (@!%*?&) ')
+            input_password = stdiomask.getpass(prompt="Digite a senha: ", mask="*")
+
+            while not is_password_valid(input_password, show):
+                input_password = stdiomask.getpass(prompt="Digite uma senha válida: ", mask="*")
+
+            return input_password
+</code></pre>
+    </details>
+    <details>
+        <summary>Desenvolvimento de funções para criação do time</summary>
+        <p align="justify">Criei as funções iniciais para a criação do time, permitindo que o usuário informasse o nome do time e os membros que fariam parte dele. As funções solicitavam ao usuário o nome do time e os dados dos membros, como nome, email e função. Os membros eram validados de acordo com as regras estabelecidas e, caso fossem válidos, eram adicionados ao time.</p>
+        <p align="justify">Os times eram formados por pelo menos um Líder Técnico e um Product Owner. Caso o time não atendesse a esses critérios, o usuário era informado e solicitado a informar os membros novamente. Ao informar um time válido, ele era salvo no arquivo de times.</p>
+        <pre>
+        <code>
+        def create_team_dict(id, team_name, members): #members = [{"nome": "nome do membro", "funcao": "funcao do membro"},...]
+            return {
+                "id": id,
+                "team_name": team_name,
+                "members": members
+            }
+
+        def prompt_for_team_members():
+            members = []
+            while True:
+                with open('users.txt', 'r') as file:
+                    category = prompt_for_valid_category()
+                    name = prompt_for_valid_username()
+                    email = prompt_for_valid_email()
+                    member = None
+                    for line in file:
+                        user = line_to_user_dict(line)
+                        if user["name"] == name and user["email"] == email and user["category"] == category:
+                            member = {
+                                "id" : user["id"],
+                                "category": category,
+                                "name": name,
+                                "email": email,
+                            }
+                            members.append(member)
+                            break
+                    if not member:
+                        print('Usuário não encontrado.')
+
+                    asking = input('Deseja continuar?').lower()
+                    if asking == 'n'or asking == 'nao' or asking == 'não':
+                        break
+            return members
+
+        def create_team_interactively():
+            print("\nFormulário de Criação de Time\n")
+
+            team_name = prompt_for_valid_team_name()
+            members = prompt_for_team_members()
+            if not has_team_valid_members(members):
+                print("O time precisa ter pelo menos um Líder técnico e um Product Owner")
+                return create_team_interactively()
+            team_dict = create_team_dict(uuid.uuid4(), team_name, members)
+            save_team_to_file(team_dict)
+
+        def has_team_valid_members(members):
+            """
+            Verifica se o time tem pelo menos 1 Líder Técnico e 1 PO
+            """
+            needed_categories = set(['LT', 'PO'])
+            category_of_members = set([member['category'] for member in members])
+            return needed_categories.issubset(category_of_members)
+
+        def save_team_to_file(team):
+            file = open("data/teams.txt", "a")
+            line = team_dict_to_line(team)
+            file.write(line)
+            file.write("\n")
+            file.close()
+            print("Time salvo com sucesso!")
+
+        def print_team_members(team_name):
+            found_team = None
+            with open('data/teams.txt', 'r') as file:
+                for line in file:
+                    team_dict = line_to_team_dict(line.rstrip())
+
+                    if team_name == team_dict["team_name"]:
+                        found_team = team_dict
+                        break
+
+                if not found_team:
+                    print("Time não encontrado")
+                    return
+
+            members = []
+
+            with open("data/users.txt", "r") as file:
+                for line in file:
+                    user_dict = line_to_user_dict(line)
+                    if user_dict["id"] in found_team["members_id"]:
+                        members.append({**user_dict, "password": "****"})
+
+            print("Time: ", found_team["team_name"])
+            for member in members:
+                print(member["name"], member["category"])
+
+        def team_dict_to_line(team):
+            team_id = team["id"]
+            team_name = team["team_name"]
+            members = [member["id"] for member in team["members"]]
+            members_id = ','.join(members)
+            return f"{team_id};{team_name};{members_id}"
+
+        def line_to_team_dict(line):
+            splited_line = line.split(";")
+            team_id = splited_line[0]
+            team_name = splited_line[1]
+            members_id = splited_line[2].split(',')
+            team_dict = {
+                "team_id": team_id,
+                "team_name": team_name,
+                "members_id": members_id
+            }
+            return team_dict
+</code></pre>
+    </details>
+    <details>
+        <summary>Desenvolvimento da lógica para a avaliação 360º</summary>
+        <p align="justify">Criei a lógica para a avaliação 360º, permitindo que um membro do time avaliasse os outros membros. A avaliação era composta por cinco perguntas, cada uma com cinco opções de resposta. As respostas eram armazenadas em um arquivo de texto, permitindo a geração de relatórios com base nas avaliações realizadas.</p>
+        <p align="justify">Como o sistema era composto por diferentes categorias de usuários, um instrutor 
+        <pre>
+        <code>
+        categories = {
+            'PO': 'Product Owner',
+            'LT': 'Líder Técnico',
+            'MT':  'Membro do time',
+        }
+
+
+        def search_teams_on_file_by_user(user,select_member=True, show=True):
+            teams = []
+            with open('data/teams.txt', "r") as file:
+                for line in file:
+                    team = line_to_team_dict(line)
+                    if user in team["members"]:
+                        teams.append(team)
+
+            if show:
+                if len(teams) > 0:
+                    blue_bright_print('\n          Seus times:') 
+                    for indice, team in enumerate(teams):
+                        print(f'     {indice+1}. {team["name"]}')
+
+                    input_team = int(bright_input('\nQual time deseja selecionar? '))
+
+                    if input_team > 0 and input_team <= len(teams):
+                        team = teams[input_team - 1]
+                        if select_member:
+                            return select_team_member(user, team), team['id']
+                        else:
+                            return None, team['id']
+
+                    else:
+                        red_print('\nOpção inválida. Tente novamente!\n')
+                        return search_teams_on_file_by_user(user, select_member)
+                else:
+                    green_print('Você não está inserido em nenhum time ainda.')
+                    return None
+            else:
+                return teams
+
+
+        def select_team_member(user ,team):
+            print()
+            blue_bright_print(f'     Membros de {team["name"]}:')
+            valid_members = []
+            for member in team['members']:
+                if user['category'] == 'PO' or user['category'] == 'LT' or user['category'] == 'MT':
+                    if member['category'] == 'PO' or member['category'] == 'LT' or member['category'] == 'MT':
+                        valid_members.append(member)
+                elif user['category'] == 'LG':
+                    if member['category'] == 'LT':
+                        valid_members.append(member)
+                elif user['category'] == 'FC':
+                    if member['category'] == 'PO':
+                        valid_members.append(member)
+            for indice, member in enumerate(valid_members):
+                print(f'{indice+1}. {categories[member["category"]].ljust(20," ")}{member["name"]}')
+
+            input_member = int(bright_input('\nQual membro deseja avaliar? '))
+            if input_member > 0 and input_member <= len(valid_members):
+                return valid_members[input_member-1]
+
+            else:
+                red_print('Usuário inválido. Tente novamente!')
+                return select_team_member(team)
+
+
+        def evaluation_form(user=None, team=None, show=True):
+            questions = {
+                '1': {
+                    'question': "Trabalho em equipe, cooperação e descentralização de conhecimento:",
+                    'answers': {'0': 'Muito Ruim', '1': 'Ruim', '2': 'Regular', '3': 'Bom', '4': 'Muito Bom'},
+                },
+                '2': {
+                    'question': "Iniciativa e proatividade:",
+                    'answers': {'0': 'Muito Ruim', '1': 'Ruim', '2': 'Regular', '3': 'Bom', '4': 'Muito Bom'},
+                },
+                '3': {
+                    'question': "Autodidaxia e agregação de conhecimento ao grupo:",
+                    'answers': {'0': 'Muito Ruim', '1': 'Ruim', '2': 'Regular', '3': 'Bom', '4': 'Muito Bom'},
+                },
+                '4': {
+                    'question': "Entrega de resultados e participação efetiva no projeto:",
+                    'answers': {'0': 'Muito Ruim', '1': 'Ruim', '2': 'Regular', '3': 'Bom', '4': 'Muito Bom'},
+                },
+                '5': {
+                    'question': "Competência técnica:",
+                    'answers': {'0': 'Muito Ruim', '1': 'Ruim', '2': 'Regular', '3': 'Bom', '4': 'Muito Bom'},
+                }
+            }
+            if show:
+                blue_bright_print(f"\n           Avaliação de {user['name']}\n")
+                lista = []
+                for qk, qv in questions.items():
+                    green_print(f'\n{qk}. {qv["question"]}')
+
+                    print('\nEscolha entre as opções indicadas:\n')
+                    for ak, av in qv['answers'].items():
+                        print(f'[{ak}]: {av}')
+
+                    answers_user = int(bright_input('\nOpção: '))
+                    print()
+                    while answers_user < 0 or answers_user > 4:
+                        red_print('\nOpção inválida! Tente novamente.\n')
+                        answers_user = int(bright_input('\nOpção: '))
+                    lista.append(answers_user)
+
+                return evaluation(lista, user, team)
+
+            else:
+                return questions
+
+
+        def evaluation(lista, user, team):
+            evaluation = {'skill_1': lista[0], 'skill_2':lista[1], 'skill_3':lista[2], 'skill_4':lista[3], 'skill_5':lista[4]}
+            id_sprint = 1
+            id_team = team
+            id_user_log = get_logged_user()['id']
+            category_user_log = get_logged_user()['category']
+            id_av_user = user['id']
+            category_av_user = user['category']
+            name_av_user = user['name']
+            skill_1 = evaluation["skill_1"]
+            skill_2 = evaluation["skill_2"]
+            skill_3 = evaluation["skill_3"]
+            skill_4 = evaluation["skill_4"]
+            skill_5 = evaluation["skill_5"]
+
+            line = f"{id_sprint};{id_team};{id_user_log};{category_user_log};{id_av_user};{category_av_user};{name_av_user};{skill_1};{skill_2};{skill_3};{skill_4};{skill_5}"
+
+            return save_evaluation(line)
+
+
+        def save_evaluation(line):
+            file = open('data/evaluations.txt', "a")
+            file.write(line)
+            file.write("\n")
+            file.close()
+
+
+        def line_to_evaluation_dict(line):
+            splitted_line = line.rstrip("\n").split(";")
+            id_sprint = splitted_line[0]
+            id_team = splitted_line[1]
+            id_user_log = splitted_line[2]
+            category_user_log = splitted_line[3]
+            id_av_user = splitted_line[4]
+            category_av_user = splitted_line[5]
+            name_av_user = splitted_line[6]
+            skill_1 = splitted_line[7]
+            skill_2 = splitted_line[8]
+            skill_3 = splitted_line[9]
+            skill_4 = splitted_line[10]
+            skill_5 = splitted_line[11]
+            dict = {
+                    "id_sprint": id_sprint,
+                    "id_team": id_team,
+                    "id_user_log": id_user_log,
+                    "category_user_log": category_user_log,
+                    "id_av_user": id_av_user,
+                    "category_av_user": category_av_user,
+                    "name_av_user": name_av_user,
+                    "skill_1": skill_1,
+                    "skill_2": skill_2,
+                    "skill_3": skill_3,
+                    "skill_4": skill_4,
+                    "skill_5": skill_5 
+                    }
+            return dict
+
+
+        def mean_grades(team, user):
+            skills = [[],[],[],[],[]]
+
+            with open ('data/evaluations.txt', "r") as file:
+                for line in file:
+                    splitted_line = line.rstrip("\n").split(";")
+                    if team == splitted_line[1] and user == splitted_line[4]:
+                        skills[0].append(int(splitted_line[7]))
+                        skills[1].append(int(splitted_line[8]))
+                        skills[2].append(int(splitted_line[9]))
+                        skills[3].append(int(splitted_line[10]))
+                        skills[4].append(int(splitted_line[11]))
+
+            if len(skills[0]) > 0:    
+                mean = [
+                    round(statistics.mean(skills[0]), 1),
+                    round(statistics.mean(skills[1]), 1),
+                    round(statistics.mean(skills[2]), 1),
+                    round(statistics.mean(skills[3]), 1),
+                    round(statistics.mean(skills[4]), 1),
+                ]
+
+                total_mean = round(statistics.mean(mean), 1)
+
+                return [mean, total_mean]
+            else:
+                return None
+
+
+        def print_mean_grades(team, user):
+            mean = mean_grades(team,user['id'])
+            questions = evaluation_form(user, team, show=False)
+
+            if mean is None:
+                magenta_print('\nVocê ainda não foi avaliado.')
+                return
+
+            blue_bright_print(f"\n          Médias de {user['name']}\n")    
+            for n, question in enumerate(questions):
+                bright_print(f'{questions[question]["question"]}')
+                if mean[0][n] > 2:
+                    green_print(f'{mean[0][n]}')
+                elif mean[0][n] == 2:
+                    magenta_print(f'{mean[0][n]}')
+                else:
+                    red_print(f'{mean[0][n]}')
+            if mean[1] >= 2:
+                green_print(f'\nMédia total: {mean[1]}\n')
+            elif mean[1] == 2:
+                magenta_print(f'\nMédia total: {mean[1]}\n')
+            else:
+                red_print(f'\nMédia total: {mean[1]}\n')
+
+        def print_mean_grades_LG(team_id, LT = False):
+            with open('data/teams.txt', 'r') as file:
+                for line in file:
+                    team_dict = line_to_team_dict(line)
+                    if team_id == team_dict['id']:
+                        team = team_dict
+                        break
+
+            team_member_mean = {member['id']: {'name': member['name'], 'category': member['category']} for member in team['members']}
+
+            with open ('data/evaluations.txt', "r") as file:
+                for line in file:
+                    dict_line = line_to_evaluation_dict(line)
+                    if team_id == dict_line['id_team']:
+                        if team_member_mean[dict_line['id_av_user']].get('mean', None) is None:
+                            member_mean = mean_grades(team_id, dict_line['id_av_user'])
+                            team_member_mean[dict_line['id_av_user']]['mean'] = member_mean
+
+            questions = evaluation_form(show=False)
+            members_to_list = team_member_mean
+
+            if LT:
+                members_to_list = {id: item for id, item in team_member_mean.items() if item['category'] == 'LT'}
+            for item in members_to_list.values():
+                if 'mean' not in item:
+                    if item['category'] not in ['FC', 'LG']:
+                        magenta_print(f'\n{item["name"]} ({categories[item["category"]]}) ainda não foi avaliado.')
+                    continue
+                blue_bright_print(f"\n          Médias de {item['name']} - {categories[item['category']]}\n")
+                for n, question in enumerate(questions):
+                    bright_print(f'{questions[question]["question"]}', end = ' ')
+                    if item["mean"][0][n] > 2:
+                        green_print(f'{item["mean"][0][n]}')
+                    elif item["mean"][0][n] == 2:
+                        magenta_print(f'{item["mean"][0][n]}')
+                    else:
+                        red_print(f'{item["mean"][0][n]}')
+                if item["mean"][1] >= 2:
+                    green_print(f'\nMédia total: {item["mean"][1]}\n')
+                elif item["mean"][1] == 2:
+                    magenta_print(f'\nMédia total: {item["mean"][1]}\n')
+                else:
+                    red_print(f'\nMédia total: {item["mean"][1]}\n')
+
+        def print_mean_grades_FC(team):
+            lista = []
+            with open ('data/evaluations.txt', "r") as file:
+                for line in file:
+                    dict_line = line_to_evaluation_dict(line)
+                    if team == dict_line['id_team']:
+                        if dict_line['category_av_user'] == 'PO':
+                            if dict_line['id_av_user'] not in [item[0] for item in lista]:
+                                po_mean = mean_grades(team, dict_line['id_av_user'])
+                                lista.append((dict_line['id_av_user'], dict_line['name_av_user'], po_mean))
+
+            if len(lista) < 1:
+                magenta_print('\nO PO desse time ainda não foi avaliado.')
+
+            questions = evaluation_form(show=False)
+            for item in lista:
+                blue_bright_print(f"\n          Médias de {item[1]}\n")    
+                for n, question in enumerate(questions):
+                    bright_print(f'{questions[question]["question"]}', end = ' ')
+                    if item[2][0][n] > 2:
+                        green_print(f'{item[2][0][n]}')
+                    elif item[2][0][n] == 2:
+                        magenta_print(f'{item[2][0][n]}')
+                    else:
+                        red_print(f'{item[2][0][n]}')
+                if item[2][1] >= 2:
+                    green_print(f'\nMédia total: {item[2][1]}\n')
+                elif item[2][1] == 2:
+                    magenta_print(f'\nMédia total: {item[2][1]}\n')
+                else:
+                    red_print(f'\nMédia total: {item[2][1]}\n')
+
+        def run_evaluation():
+            user_log = get_logged_user()
+            if user_log['category']!= 'LG' and user_log['category']!= 'FC':
+                av_user, id_team = search_teams_on_file_by_user(user_log)
+                evaluation_form(av_user, id_team)
+            elif user_log['category'] == 'LG':
+                av_user, id_team = search_teams_on_file_by_user(user_log)
+                evaluation_form(av_user, id_team)
+            else:
+                av_user, id_team = search_teams_on_file_by_user(user_log)
+                evaluation_form(av_user, id_team)
+
+        def run_mean_grades():
+            user_log = get_logged_user()
+
+            if user_log['category']!= 'LG' and user_log['category']!= 'FC':
+                av_user, id_team = search_teams_on_file_by_user(user_log, select_member=False)
+                print_mean_grades(id_team, user_log)
+
+
+            elif user_log['category'] == 'LG':
+                av_user, id_team = search_teams_on_file_by_user(user_log, select_member=False)
+                only_LT = ['Ver somente as médias dos Líderes Técnicos', 'Ver as notas de todo o time']
+                blue_bright_print('\n       Selecione uma opção:'.center(60))
+                for indice, item in enumerate(only_LT):
+                    print(f'     {indice+1}. {item}')
+                awnser = int(input('\n   Opção: '))
+                while awnser != 1 and awnser != 2:
+                    awnser = int(input('\n   Opção: '))
+                if awnser == 1:
+                    print_mean_grades_LG(id_team, LT=True)
+                elif awnser == 2:
+                    print_mean_grades_LG(id_team)
+
+
+            elif user_log['category'] == 'FC':   
+                av_user, id_team = search_teams_on_file_by_user(user_log, select_member=False)
+                print_mean_grades_FC(id_team)
+</pre></code>
+    </details>
+    <details>
+        <summary>Desenvolvimento da lógica de sprints</summary>
+        <p align="justify">Criei a lógica para a criação e fechamento de sprints, permitindo que um instrutor do tipo Group Leader pudesse criar uma sprint e fechá-la. Além disso, criei a lógica para a seleção de uma sprint, permitindo que um instrutor pudesse selecionar uma sprint para avaliar os membros do time</p>
+        <p align="justify">Para a criação de uma sprint, era necessário fechar a sprint anterior, caso houvesse uma sprint aberta. Para isso, criei a função <code>get_opened_sprint</code>, que retornava a sprint aberta, caso houvesse uma, e a função <code>has_opened_sprint</code>, que verificava se havia uma sprint aberta. Além disso, criei a função <code>select_sprint_tui</code>, que permitia a seleção de uma sprint, e a função <code>close_sprint_tui</code>, que fechava a sprint selecionada.</p>
+        <p align="justify">A criação de uma sprint se dava por turma, ou seja, um instrutor do tipo Group Leader podia criar uma sprint para uma turma específico.</p>
+        <pre>
+        <code>
+        def summary_sprint(sprint):
+            name = sprint["name"]
+            id = sprint["id"]
+            status = sprint["status"]
+            return f"{name} #{id} ({status})"
+
+
+        def show_sprints_from_group(group):
+            sprints = get_all_sprints_from_group(group)
+            print("Sprints")
+            for sprint in sprints:
+                print(f"    - {summary_sprint(sprint)}")
+
+
+        def has_group_opened_sprint(group):
+            opened_sprints = get_opened_sprint_from_group(group)
+            return opened_sprints is not None
+
+
+        def open_sprint_for_group(group):
+            if has_group_opened_sprint(group):
+                print("Já existe uma sprint aberta.")
+                return
+            sprint_name = input('Qual o nome da sprint? ')
+            create_sprint(group, sprint_name)
+
+
+        def close_sprint_from_group(group):
+            if not has_group_opened_sprint(group):
+                print("Não existe sprint aberta.")
+                return
+            sprint = get_opened_sprint_from_group(group)
+            print(summary_sprint(sprint))
+            answer = input("Tem certeza que deseja fechar essa sprint (S/N)? ")
+            if answer != "S" and answer != "s":
+                return
+            sprint["status"] = "fechada"
+            update_sprints()    
+
+
+        def select_sprint_from_group(group, closed=False):
+            sprints = get_all_sprints_from_group(group)
+            if not closed:
+                valid_sprints = sprints
+            if closed:
+                valid_sprints = []
+                for sprint in sprints:
+                    if sprint['status'] == 'fechada':
+                        valid_sprints.append(sprint)
+
+            if len(valid_sprints) == 0:
+                print("Nenhuma sprint encontrada.")
+                return None
+
+            for index, sprint in enumerate(valid_sprints):
+                print(f"{index+1} - {summary_sprint(sprint)}")
+
+            while True:
+                option = safe_int_input("Opção: ")
+                if option > 0 and option <= len(sprints):
+                    return valid_sprints[option - 1]
+                print("Opção inválida.")
+
+
+        def reopen_sprint_from_group(group):
+            if has_group_opened_sprint(group):
+                print("Já existe uma sprint aberta.")
+                return
+            sprint = select_sprint_from_group(group)
+
+            if sprint is None:
+                return
+            
+            print(summary_sprint(sprint))
+            answer = input("Tem certeza que deseja reabrir essa sprint (S/N)? ")
+            if answer != "S" and answer != "s":
+                return
+            sprint["status"] = "aberta"
+            update_sprints()    
+
+
+        def admin_sprints_menu():
+            print("Selecione a Turma")
+            turma = search_and_select_turma()
+            if turma is None:
+                return
+            
+            while True:
+                print("Menu Sprints (Administrador)")
+                print(f"Turma: {turma['name']}")
+                print("1 - Listar")
+                print("2 - Abrir Nova")
+                print("3 - Fechar")
+                print("4 - Reabrir")
+                print("5 - Voltar")
+                
+                while True:
+                    option = safe_int_input("Opção: ")
+                    if option >= 1 and option <= 6:
+                        break
+                    print("Opção inválida.")
+                
+                if option == 1:
+                    show_sprints_from_group(turma)
+                elif option == 2:
+                    open_sprint_for_group(turma)
+                elif option == 3:
+                    close_sprint_from_group(turma)
+                elif option == 4:
+                    reopen_sprint_from_group(turma)
+                else:
+                    return
+</code></pre>
+    </details>
+    <details>
+        <summary>Desenvolvimento da lógica de geração de relatórios</summary>
+        <p align="justify">Criei a lógica para a geração de relatórios, permitindo que o administrador pudesse ver todas as médias no geral ou por sprint, um aluno pudesse ver todas as suas médias no geral ou por sprint, um instrutor do tipo Group Leader pudesse ver as médias de todos os membros do time ou somente dos Líderes Técnicos e um instrutor do tipo Fake Client pudesse ver somente as médias dos Product Owners.</p>
+        <pre>
+        <code>
+        EVALUATIONS_TXT_FILE =  "data/evaluations.txt"
+
+        CATEGORIES = {
+            "PRODU": "Product Owner",
+            "LIDER": "Líder Técnico",
+            "COMUM": "Membro do time",
+        }
+
+
+        def average_grades(team_id, user_id, sprint=None):
+            skills = [[], [], [], [], []]
+
+            with open(EVALUATIONS_TXT_FILE, "r") as file:
+                for line in file:
+                    evaluation = line_to_evaluation_dict(line)
+                    if sprint is not None:
+                        if team_id == evaluation["id_team"] and user_id == evaluation["evaluated_id"] and sprint['id'] == evaluation['id_sprint']:
+                            skills[0].append(int(evaluation["skill_1"]))
+                            skills[1].append(int(evaluation["skill_2"]))
+                            skills[2].append(int(evaluation["skill_3"]))
+                            skills[3].append(int(evaluation["skill_4"]))
+                            skills[4].append(int(evaluation["skill_5"]))
+                    else:
+                        if team_id == evaluation["id_team"] and user_id == evaluation["evaluated_id"]:
+                            skills[0].append(int(evaluation["skill_1"]))
+                            skills[1].append(int(evaluation["skill_2"]))
+                            skills[2].append(int(evaluation["skill_3"]))
+                            skills[3].append(int(evaluation["skill_4"]))
+                            skills[4].append(int(evaluation["skill_5"]))
+
+
+            if len(skills[0]) > 0:
+                mean = [
+                    round(statistics.mean(skills[0]), 1),
+                    round(statistics.mean(skills[1]), 1),
+                    round(statistics.mean(skills[2]), 1),
+                    round(statistics.mean(skills[3]), 1),
+                    round(statistics.mean(skills[4]), 1),
+                ]
+
+                total_mean = round(statistics.mean(mean), 1)
+
+                return [mean, total_mean]
+            else:
+                return None
+
+
+        def print_average_grades(team, user, sprint=None):
+            average = average_grades(team['id'], user["id"], sprint)
+            questions = evaluation_form(show=False)
+
+            if average is None:
+                magenta_print("\nVocê ainda não foi avaliado.")
+                return
+
+            blue_bright_print(f"\n          Médias de {user['name']}\n")
+            for n, question in enumerate(questions):
+                bright_print(f'{questions[question]["question"]}')
+                if average[0][n] > 2:
+                    green_print(f"{average[0][n]}")
+                elif average[0][n] == 2:
+                    magenta_print(f"{average[0][n]}")
+                else:
+                    red_print(f"{average[0][n]}")
+            if average[1] >= 2:
+                green_print(f"\nMédia total: {average[1]}\n")
+            elif average[1] == 2:
+                magenta_print(f"\nMédia total: {average[1]}\n")
+            else:
+                red_print(f"\nMédia total: {average[1]}\n")
+
+
+        def print_average_grades_LG(team, sprint=None, LT=False):
+
+            team_member_average = {
+                member["id"]: {"name": member["name"], "category": member["category"]}
+                for member in team["members"]
+            }
+
+            with open(EVALUATIONS_TXT_FILE, "r") as file:
+                for line in file:
+                    dict_line = line_to_evaluation_dict(line)
+                    if team['id'] == dict_line["id_team"]:
+                        if team_member_average[dict_line["evaluated_id"]].get("average", None) is None:
+                            member_average = average_grades(team['id'], dict_line["evaluated_id"], sprint)
+                            team_member_average[dict_line["evaluated_id"]]["average"] = member_average
+
+            questions = evaluation_form(show=False)
+            members_to_list = team_member_average
+
+            if LT:
+                members_to_list = {
+                    id: item
+                    for id, item in team_member_average.items()
+                    if item["category"] == "LIDER"
+                }
+            for item in members_to_list.values():
+                if "average" not in item:
+                    magenta_print(
+                        f'\n{item["name"]} ({CATEGORIES[item["category"]]}) ainda não foi avaliado.'
+                    )
+                    continue
+                blue_bright_print(
+                    f"\n          Médias de {item['name']} - {CATEGORIES[item['category']]}\n"
+                )
+                for n, question in enumerate(questions):
+                    bright_print(f'{questions[question]["question"]}', end=" ")
+                    if item["average"][0][n] > 2:
+                        green_print(f'{item["average"][0][n]}')
+                    elif item["average"][0][n] == 2:
+                        magenta_print(f'{item["average"][0][n]}')
+                    else:
+                        red_print(f'{item["average"][0][n]}')
+                if item["average"][1] >= 2:
+                    green_print(f'\nMédia total: {item["average"][1]}\n')
+                elif item["average"][1] == 2:
+                    magenta_print(f'\nMédia total: {item["average"][1]}\n')
+                else:
+                    red_print(f'\nMédia total: {item["average"][1]}\n')
+
+
+        def print_average_grades_FC(team, sprint):
+            lista = []
+            with open(EVALUATIONS_TXT_FILE, "r") as file:
+                for line in file:
+                    dict_line = line_to_evaluation_dict(line)
+                    if team["id"] == dict_line["id_team"]:
+                        if dict_line["evaluated_category"] == "PRODU":
+                            if dict_line["evaluated_id"] not in [item[0] for item in lista]:
+                                po_average = average_grades(team["id"], dict_line["evaluated_id"], sprint)
+                                lista.append(
+                                    (
+                                        dict_line["evaluated_id"],
+                                        dict_line["evaluated_name"],
+                                        po_average,
+                                    )
+                                )
+
+            if len(lista) < 1:
+                magenta_print("\nO Product Owner desse time ainda não foi avaliado.")
+
+            questions = evaluation_form(show=False)
+            for item in lista:
+                blue_bright_print(f"\n          Médias de {item[1]}\n")
+                for n, question in enumerate(questions):
+                    bright_print(f'{questions[question]["question"]}', end=" ")
+                    if item[2][0][n] > 2:
+                        green_print(f"{item[2][0][n]}")
+                    elif item[2][0][n] == 2:
+                        magenta_print(f"{item[2][0][n]}")
+                    else:
+                        red_print(f"{item[2][0][n]}")
+                if item[2][1] >= 2:
+                    green_print(f"\nMédia total: {item[2][1]}\n")
+                elif item[2][1] == 2:
+                    magenta_print(f"\nMédia total: {item[2][1]}\n")
+                else:
+                    red_print(f"\nMédia total: {item[2][1]}\n")
+
+
+        def by_sprint_question(team):
+            by_sprint = [
+                "Ver as médias por sprint",
+                "Ver as médias de todas as sprints"
+            ]
+            blue_bright_print("\n       Ver médias por sprint?".center(60))
+
+            for indice, item in enumerate(by_sprint):
+                print(f"     {indice+1}. {item}")
+            awnser_sprint = int(bright_input("\n   Opção: "))
+
+            while awnser_sprint != 1 and awnser_sprint != 2:
+                awnser_sprint = int(bright_input("\n   Opção: "))
+
+            if awnser_sprint == 1:
+                sprint = select_sprint_tui(team['id'], closed=True)
+
+            elif awnser_sprint == 2:
+                sprint = None
+
+            return sprint
+
+
+        def run_average_grades():
+            user, groups = search_groups()
+            av_user, team = select_group(user, groups, select_member=False)
+            sprint = by_sprint_question(team)
+
+            if user["type"] == 'COMUM':
+                print_average_grades(team, user, sprint)
+
+            elif user["type"] == 'ADMIN':
+                print_average_grades_LG(team, sprint)
+
+            elif user["id"] == team['turma']['group_leader']['id']:
+                only_LT = [
+                    "Ver somente as médias dos Líderes Técnicos",
+                    "Ver as notas de todo o time",
+                ]
+                blue_bright_print("\n       Quais médias quer ver?".center(60))
+                for indice, item in enumerate(only_LT):
+                    print(f"     {indice+1}. {item}")
+                awnser = int(input("\n   Opção: "))
+                while awnser != 1 and awnser != 2:
+                    awnser = int(input("\n   Opção: "))
+                if awnser == 1:
+                    print_average_grades_LG(team, sprint, LT=True)
+                elif awnser == 2:
+                    print_average_grades_LG(team, sprint)
+
+            elif user["id"] == team['turma']['fake_client']['id']:
+                print_average_grades_FC(team, sprint)
+</code></pre>
+    </details>
 </ul>
 
 <h2 id="api3">Sistema de lançamento de horas-extras e sobreavisos</h2>
@@ -43,7 +973,7 @@
     <summary>Modelagem do banco de dados</summary>
     <p>Realizei a modelagem do banco de dados, utilizando o PostgreSQL. O banco de dados foi modelado de acordo com as necessidades da empresa parceira, contemplando as entidades e relacionamentos necessários para a aplicação.</p>
     <p>Nesse processo, fui responsável pela criação do DER (Diagrama de Entidade-Relacionamento) e pela criação dos scripts de criação das tabelas e relacionamentos.</p>
-    <image src="./assets/DER.png" alt="Diagrama de Entidade-Relacionamento">
+    <image src="./assets/DER_API3.png" alt="Diagrama de Entidade-Relacionamento">
 </details>
 
 <details>
