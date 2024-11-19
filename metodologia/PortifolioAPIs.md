@@ -21,7 +21,8 @@
 <h1 id="projetos">Projetos</h1>
 <ul>
     <li><a href="#api1">Projeto 1: Sistema de avaliação 360º</a></li>
-    <li><a href="#api3">Projeto 3: Sistema de lançamento de horas-extras e sobreavisos</a></li>
+    <li><a href="#api2">Projeto 2: Sistema de lançamento de horas-extras e sobreavisos desktop</a></li>
+    <li><a href="#api3">Projeto 3: Sistema de lançamento de horas-extras e sobreavisos web</a></li>
 </ul>
 
 <h2 id="api1">Sistema de avaliação 360º</h2>
@@ -953,7 +954,627 @@ Atuei como desenvolvedora full-stack. A seguir, estão listadas as minhas contri
     </details>
 </ul>
 
-<h2 id="api3">Sistema de lançamento de horas-extras e sobreavisos</h2>
+<h2 id="api2">Sistema de lançamento de horas-extras e sobreavisos desktop</h2>
+
+<h3>Descrição</h3>
+
+<p align="justify">Este projeto foi desenvolvido em parceria com a empresa 2RP. O objetivo era criar uma aplicação desktop que permitisse o lançamento de horas-extras e sobreavisos dos colaboradores, para facilitar a gestão e o controle das horas trabalhadas. A aplicação foi desenvolvida em Java, juntamente com JavaFX para o front-end e banco de dados MySQL.</p>
+
+<p align="justify">A empresa parceira possuía dificuldades na gestão de horas extras e sobreavisos dos colaboradores, uma vez que o processo era manual e demandava muito tempo. A aplicação desenvolvida permitiu a automatização do processo, facilitando a gestão e o controle das horas lançadas.</p>
+
+<h3>Contribuições Individuais</h3>
+<p>Atuei como desenvolvedora full-stack. A seguir, estão listadas as minhas contribuições para o projeto:</p>
+
+<ul>
+    <details>
+        <summary>Modelagem e criação dos scripts SQL do banco de dados</summary>
+        <p align="justify">Participei da modelagem do banco de dados, utilizando o MySQL. O banco de dados foi modelado de acordo com as necessidades da empresa parceira, contemplando as entidades e relacionamentos necessários para a aplicação.</p>
+        <p align="justify">Além disso, participei da criação dos scripts SQL para a criação das tabelas e relacionamentos no banco de dados.</p>
+        <pre>
+        <code>
+        create table
+            hora(
+                id int not null AUTO_INCREMENT PRIMARY KEY,
+                username_lancador VARCHAR(20) not null,
+                data_hora_inicio DATETIME not NULL,
+                data_hora_fim DATETIME not NULL,
+                tipo VARCHAR(15) NOT NULL,
+                Foreign Key (username_lancador) REFERENCES usuarios(username)
+            );
+
+        create table
+            centro_resultado(
+                nome VARCHAR(30) NOT NULL,
+                status_aprovacao ENUM('ativo', 'inativo') NOT NULL,
+                codigo_cr VARCHAR(10) not NULL PRIMARY KEY,
+                sigla VARCHAR (10) NOT NULL UNIQUE
+            );
+
+        create table
+            cliente (
+                razao_social VARCHAR(70) NOT NULL,
+                status_clientes ENUM('ativo', 'inativo') NOT NULL,
+                cnpj BIGINT PRIMARY KEY NOT NULL
+            );
+
+        create table
+            contrato(
+                id int(10) auto_increment primary key,
+                cod_cr VARCHAR(10) not NULL,
+                cnpj_cliente BIGINT NOT NULL,
+                Foreign Key (cod_cr) REFERENCES centro_resultado(codigo_cr),
+                Foreign KEY (cnpj_cliente) REFERENCES cliente(cnpj)
+            );
+
+        create table
+            integrantes (
+                gestor BOOLEAN NOT NULL,
+                username_integrante VARCHAR(20) not null,
+                cod_cr VARCHAR(10) not NULL,
+                Foreign Key (username_integrante) REFERENCES usuarios(username),
+                Foreign Key (cod_cr) REFERENCES centro_resultado(codigo_cr),
+                PRIMARY KEY (username_integrante, cod_cr)
+            );
+</code></pre>
+    </details>
+    <details>
+        <summary>Criação do método getUsuario na classe usuarioDAO</summary>
+        <p align="justify">Criei o método <code>getUsuario</code> na classe <code>usuarioDAO</code>, que era responsável por buscar um usuário no banco de dados com base no nome de usuário e senha informados. O método retornava um objeto do tipo <code>Usuario</code>, que continha as informações do usuário.</p>
+        <pre>
+        <code>
+        public Usuario getUsuario(String username, String senha){
+                
+                        String sql = "SELECT * FROM usuario WHERE username = ? AND senha = ?";
+                        
+                Connection conn = null;
+                PreparedStatement pstm = null;
+                //Classe que vai recuperar os dados do banco. ***SELECT****
+                ResultSet rset = null;
+                        Usuario usuario = Usuario.getInstance();
+                
+                try {
+                    conn = Conexao.createConnectionToMySQL();
+                    
+                    pstm = (PreparedStatement) conn.prepareStatement(sql);
+                                pstm.setString(1, username);
+                                pstm.setString(2, senha);			
+                    rset = pstm.executeQuery();
+                                
+                    
+                                if (rset.next()) {
+                        
+                        usuario.setUsername(rset.getString("username"));
+                        usuario.setNome(rset.getString("nome"));
+                                        usuario.setSenha(rset.getString("senha"));
+                        usuario.setCargo(rset.getString("funcao"));
+                        usuario.setStatus(rset.getString("status_user"));
+                                                        
+                    } else {
+                                    return null;
+                                }
+                                
+                }catch (Exception e) {
+                        e.printStackTrace();
+                    }finally {
+                        try {
+                            if(rset!=null) {
+                                rset.close();
+                            }
+                            
+                            if(pstm!=null) {
+                                pstm.close();
+                            }
+                            
+                            if(conn!=null) {
+                                conn.close();
+                            }
+                        }catch(Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    return usuario;
+            }
+</code></pre>
+    </details>
+    <details>
+        <summary>Criação do controller de Login</summary>
+        <p align="justify">Criei o controller de Login, utilizando o JavaFX. O controller era responsável por controlar a tela de login, validando as informações inseridas pelo usuário e realizando a autenticação do usuário.</p>
+        <pre>
+        <code>
+        public class TelaLoginController implements Initializable {
+
+            @FXML
+            private TextField LoginUsuário;
+            @FXML
+            private PasswordField LoginSenha;
+            @FXML
+            private Button LoginBotaoEntrar;
+            @FXML
+            private Button LoginBotaoFechar;
+
+            @Override
+            public void initialize(URL url, ResourceBundle rb) {
+                // TODO
+            }    
+
+            @FXML
+            private void handleLoginButtonAction(ActionEvent event) {
+                    String user = LoginUsuário.getText();
+                    String senha = LoginSenha.getText();
+
+                    try (Connection connection = Conexao.createConnectionToMySQL()) {
+                        Usuario usuario = new usuarioDAO().getUsuario(user, senha);
+                        if (usuario!=null && usuario.getUsername().equals( user) && usuario.getSenha().equals(senha)) {
+                            
+                            System.out.println("Logado");
+                            System.out.println(usuario.getNome());
+                            LoginSenha.setText("");
+                            // Usuário e senha são válidos, exibir próxima tela
+                            App.setRoot("LancamentoColaborador");
+                            
+                        } else {
+                            Alert alert = new Alert(Alert.AlertType.ERROR);
+                            alert.setTitle("Erro");
+                            alert.setHeaderText("Usuário ou senha inválidos");
+                            alert.setContentText("Por favor verifique suas credenciais e tente novamente.");
+                            alert.showAndWait();
+                        }
+                    } catch (SQLException e) {
+                        Alert alert = new Alert(Alert.AlertType.ERROR);
+                        alert.setTitle("Erro");
+                        alert.setHeaderText("Erro de banco de dados");
+                        alert.setContentText("Ocorreu um erro ao se comunicar com o banco de dados. Por favor tente novamente mais tarde.");
+                        alert.showAndWait();
+                        e.printStackTrace();
+                    } catch (Exception e) {
+                        Alert alert = new Alert(Alert.AlertType.ERROR);
+                        alert.setTitle("Erro");
+                        alert.setHeaderText("Erro desconhecido");
+                        alert.setContentText("Ocorreu um erro desconhecido. Por favor tente novamente mais tarde.");
+                        alert.showAndWait();
+                        e.printStackTrace();
+                    } 
+                }
+
+                @FXML
+                private void handleFecharButtonAction(ActionEvent event) {
+                    // Obtém a janela atual
+                Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+                // Fecha a janela atual
+                stage.close();
+                }
+            }
+</code></pre>
+    </details>
+    <details>
+        <summary>Criação do método para editar Centros de Resultados pelo Administrador</summary>
+        <p align="justify">Criei o método <code>BotaoEditar</code> na classe <code>CadastroCRADMController</code>, que era responsável por editar um Centro de Resultado. O método verificava se alguma linha da tabela de Centros de Resultado estava selecionada, exibia uma mensagem de confirmação para o usuário e, caso o usuário confirmasse, atualizava as informações do Centro de Resultado no banco de dados.</p>
+        <details>
+            <summary>Código do método update dentro de <code>crDAO</code></summary>
+            <pre>
+            <code>
+            public void update(Centro_resultado cr) {
+                String sql = "UPDATE centro_resultado SET nome=?, status_cr=?, sigla=? WHERE codigo_cr=?";
+                Connection conn = null;
+                PreparedStatement pstm = null;
+
+                try {
+                    conn = Conexao.createConnectionToMySQL();
+
+                    pstm = (PreparedStatement) conn.prepareStatement(sql);
+                    pstm.setString(1, cr.getNome());
+                    pstm.setString(2, cr.getStatus_cr());
+                    pstm.setString(3, cr.getSigla());
+                    pstm.setString(4, cr.getCodigo_cr());
+
+                    pstm.executeUpdate();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    try {
+                        if (pstm != null) {
+                            pstm.close();
+                        }
+                        if (conn != null) {
+                            conn.close();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+</code></pre>
+        </details>
+        <details>
+            <summary>Código do método BotaoEditar</summary>
+                <pre>
+                <code>
+                @FXML
+                private void BotaoEditar(ActionEvent event) {
+                    // verifica se alguma linha foi selecionada
+                    if (tabelaCadastroCr.getSelectionModel().getSelectedItem() != null) {
+                        // desabilita a edição da coluna de código
+                        tabelaCadastroCr.getColumns().get(0).setEditable(false);
+
+                        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                        alert.setTitle("Confirmação");
+                        alert.setHeaderText(null);
+                        alert.setContentText("Tem certeza que deseja atualizar os dados do CR?");
+
+                        Optional<ButtonType> result = alert.showAndWait();
+                        if (result.isPresent() && result.get() == ButtonType.OK) {
+                            // o usuário clicou em "OK", continue com a ação
+                            Centro_resultado crSelecionado = tabelaCadastroCr.getSelectionModel().getSelectedItem();
+
+                            String novoNome = entradaNome.getText();
+                            String novaSigla = entradaSigla.getText();
+                            if (!novoNome.isEmpty()) {
+                                // atualiza o objeto Centro_resultado com o novo nome
+                                crSelecionado.setNome(novoNome);
+                                crSelecionado.setSigla(novaSigla);
+
+                                // salva o objeto atualizado no banco de dados
+                                crDAO crdao = new crDAO();
+                                crdao.update(crSelecionado);
+
+                                // atualiza a tabela com as novas informações
+                                carregarTabelaCr();
+                                limparCampos();
+                            }
+                        } else {
+                            limparCampos();
+                            System.out.println("Cancelado");
+                        }
+
+                    } else {
+                        System.out.println("Nenhuma linha selecionada");
+                        Alert alert = new Alert(Alert.AlertType.ERROR);
+                        alert.setTitle("Nenhuma linha selecionada");
+                        alert.setHeaderText(null);
+                        alert.setContentText("Por favor, selecione uma linha da tabela para editar");
+                        alert.showAndWait();
+                    }
+                }
+</code></pre>
+        </details>
+    </details>
+    <details>
+        <summary>Criação do método para ativação do Centro de Resultado pelo Administrador</summary>
+        <p align="justify">Criei o método <code>BotaoInativar</code>, dentro da classe <code>CadastroCRADMController</code>, que era responsável por ativar um Centro de Resultado. O método verificava se alguma linha da tabela de Centros de Resultado estava selecionada, exibia uma mensagem de confirmação para o usuário e, caso o usuário confirmasse, atualizava o status do Centro de Resultado para ativo no banco de dados.</p>
+        <pre>
+        <code>
+        @FXML
+        private void BotaoAtivar(ActionEvent event) {
+            // exibe um alerta de confirmação antes de ativar a CR
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Confirmação");
+            alert.setHeaderText(null);
+            alert.setContentText("Tem certeza que deseja ativar a CR?");
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.get() == ButtonType.OK) {
+                // o usuário clicou em "Ok", então a CR será ativada
+                crDAO crdao = new crDAO();
+                Centro_resultado cr = crdao.getCrByCodigo(valorDoItemSelecionado);
+                cr.setStatus_cr("ativo");
+                crdao.update(cr);
+                carregarTabelaCr();
+                limparCampos();
+
+                Alert alert2 = new Alert(Alert.AlertType.INFORMATION);
+                alert2.setTitle("CR ativado");
+                alert2.setHeaderText(null);
+                alert2.setContentText("O CR foi ativado com sucesso!");
+                alert2.showAndWait();
+            } else {
+                // o usuário clicou em "Cancelar", então nada será feito
+                limparCampos();
+                carregarTabelaCr();
+            }
+        }
+</code></pre>
+    </details>
+    <details>
+        <summary>Criação do método para inativação do Centro de Resultado pelo Administrador</summary>
+        <p align="justify">Criei o método <code>BotaoInativar</code>, dentro da classe <code>CadastroCRADMController</code>, que era responsável por inativar um Centro de Resultado. O método verificava se alguma linha da tabela de Centros de Resultado estava selecionada, exibia uma mensagem de confirmação para o usuário e, caso o usuário confirmasse, atualizava o status do Centro de Resultado para inativo no banco de dados.</p>
+        <pre>
+        <code>
+        @FXML
+        private void BotaoInativar(ActionEvent event) {
+            // exibe um alerta de confirmação antes de inativar a CR
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Confirmação");
+            alert.setHeaderText(null);
+            alert.setContentText("Tem certeza que deseja inativar o CR?");
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.get() == ButtonType.OK) {
+                // o usuário clicou em "Ok", então a CR será inativada
+                crDAO crdao = new crDAO();
+                Centro_resultado cr = crdao.getCrByCodigo(valorDoItemSelecionado);
+                cr.setStatus_cr("inativo");
+                crdao.update(cr);
+
+                carregarTabelaCr();
+                limparCampos();
+
+                Alert alert2 = new Alert(Alert.AlertType.INFORMATION);
+                alert2.setTitle("CR inativado");
+                alert2.setHeaderText(null);
+                alert2.setContentText("O CR foi inativado com sucesso!");
+                alert2.showAndWait();
+            } else {
+                // o usuário clicou em "Cancelar", então nada será feito
+                limparCampos();
+                carregarTabelaCr();
+            }
+        }
+</code></pre>
+    </details>
+    <details>
+        <summary>Criação do método validaDataHora na classe LancamentoColaboradorController</summary>
+        <p align="justify">Criei o método que validava a data e hora de início e fim do lançamento de horas, garantindo que a data e hora de início fossem anteriores à data e hora de fim. O método <code>validaDataHora</code> era responsável por realizar essa validação e retornar um valor booleano indicando se a data e hora eram válidas.</p>
+        <pre>
+        <code>
+        public boolean validaDataHora(Hora hora) {
+            boolean valido = false;
+            // Captura data hora inicio e fim
+            Timestamp dtHrInicio = hora.getData_hora_inicio();
+            Timestamp dtHrFim = hora.getData_hora_fim();
+
+            int resultDtHrIniFim = dtHrInicio.compareTo(dtHrFim);
+
+            // Verifica se a dtHrInicio é anterior a dtHrFim
+            if (resultDtHrIniFim < 0) {
+                valido = true;
+            }
+            return valido;
+        }
+</code></pre>
+    </details>
+    <details>
+        <summary>Criação do método getConflito na classe LancamentoColaboradorController</summary>
+        <p align="justify">Criei o método <code>getConflito</code> na classe <code>LancamentoColaboradorController</code>, que era responsável por verificar se o lançamento de horas entrava em conflito com alguma hora já lançada. O método comparava a data e hora de início e fim do lançamento com as datas e horas de início e fim de todas as horas já lançadas, retornando um valor booleano indicando se havia conflito.</p>
+        <pre>
+        <code>
+        public boolean getConflito(Hora hora) {
+            Timestamp dtHrInicio = hora.getData_hora_inicio();
+            Timestamp dtHrFim = hora.getData_hora_fim();
+
+            // Verifica se entra em conflito com alguma hora já lançada
+            boolean conflito = false;
+            for (Hora horaExistente : lishoras) {
+                Timestamp inicio = horaExistente.getData_hora_inicio();
+                Timestamp fim = horaExistente.getData_hora_fim();
+
+                int resultIniIni = dtHrInicio.compareTo(inicio);
+                int resultFimFim = dtHrFim.compareTo(fim);
+                int resultIniFim = dtHrInicio.compareTo(fim);
+                int resultFimIni = dtHrFim.compareTo(inicio);
+
+                if ((resultIniIni > 0 && resultIniFim < 0)
+                        || (resultFimIni > 0 && resultFimFim < 0)
+                        || (resultIniIni < 0 && resultFimFim > 0)
+                        || resultIniIni == 0 || resultFimFim == 0) {
+                    conflito = true;
+                    break;
+                }
+            }
+            return conflito;
+        }
+</code></pre>
+    </details>
+    <details>
+        <summary>Criação da lógica do botaoAcionamento na classe LancamentoColaboradorController</summary>
+        <p align="justify">Criei a lógica do método <code>botaoAcionamento</code> na classe <code>LancamentoColaboradorController</code>, que era responsável por realizar o lançamento de um acionamento dentro de um sobreaviso. O método verificava se todos os campos obrigatórios estavam preenchidos, validava a data e hora de início e fim do lançamento, verificava se havia conflito com outras horas lançadas e, caso tudo estivesse correto, exibia um pop-up de confirmação e realizava o lançamento das horas.</p>
+        <pre>
+        <code>
+        @FXML
+        public void botaoAcionamento(ActionEvent event) throws ParseException {
+            if (getDataInicio().getValue() == null
+                    || getHoraInicio().getValue() == null
+                    || getMinutoInicio().getValue() == null
+                    || getDataFim().getValue() == null
+                    || getHoraFim().getValue() == null
+                    || getMinutoFim().getValue() == null
+                    || entradaProjeto.getText().isEmpty()
+                    || selecaoCliente.getValue() == null
+                    || selecaoCR.getValue() == null
+                    || entradaJustificativa.getText().isEmpty()
+                    || horaTipo.getValue() == null) {
+                System.out.println("Preencha todos os campos - tela de lançamento");
+                Alert alert = new Alert(AlertType.ERROR);
+                alert.setTitle("Preencha todos os campos");
+                alert.setHeaderText(null);
+                alert.setContentText("Alguns dos campos não foram preenchidos");
+                alert.showAndWait();
+            } else {
+                capturaHora();
+                boolean valido = validaDataHora(capturaHora());
+
+                if (valido) {
+                    boolean conflito = getConflito(capturaHora());
+
+                    if (!conflito) {
+                        try {
+                            FXMLLoader loader = new FXMLLoader(getClass().getResource("PopUpAcionamento.fxml"));
+                            Parent root = loader.load();
+                            PopUpAcionamentoController controller = new PopUpAcionamentoController();
+
+                            loader.setController(controller);
+                            Stage popup = new Stage();
+                            popup.initModality(Modality.APPLICATION_MODAL);
+                            popup.initOwner(botaoAcionamento.getScene().getWindow());
+                            popup.setScene(new Scene(root));
+
+                            popup.showAndWait();
+                            carregarTabelaLancamento();
+                            limparCampos();
+
+                        } catch (IOException e) {
+
+                        }
+                    } else {
+                        Alert alert = new Alert(Alert.AlertType.ERROR);
+                        alert.setTitle("Conflito de horas");
+                        alert.setHeaderText(null);
+                        alert.setContentText("A hora informada está em conflito com outro lançamento");
+                        alert.showAndWait();
+                    }
+                } else {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Lançamento incompatível");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Data e hora de início devem ser antes do fim");
+                    alert.showAndWait();
+                }
+            }
+        }
+</code></pre>
+    </details>
+    <details>
+        <summary>Criação da lógica do botaoAdicionar na classe PopUpAcionamentoController</summary>
+        <p align="justify">Criei a lógica do método <code>botaoAdicionar</code> na classe <code>PopUpAcionamentoController</code>, que era responsável por realizar o lançamento de um acionamento dentro de um sobreaviso. O método verificava se todos os campos obrigatórios estavam preenchidos, validava a data e hora de início e fim do lançamento, verificava se havia conflito com outras horas lançadas e, caso tudo estivesse correto, exibia um pop-up de confirmação e realizava o lançamento das horas.</p>
+        <pre>
+        <code>
+        private void botaoAdicionar() throws ParseException {
+            // Obtém os valores de data de inicio e de fim (campos de entrada)
+            inicioAcionamento = dataInicioAc.getValue();
+            fimAcionamento = dataFimAc.getValue();
+
+            // Verifica se as datas (NÃO) foram preenchidas
+            if (inicioAcionamento == null || fimAcionamento == null) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Preencha todos os campos");
+                alert.setHeaderText(null);
+                alert.setContentText("Alguns dos campos não foram preenchidos");
+                alert.showAndWait();
+            } else {
+                Hora horaExtra = new Hora();
+
+                // Preenche os dados que vêm do lançamento do sobreaviso
+                horaExtra.setCnpj_cliente(sobreaviso.getCnpj_cliente());
+                horaExtra.setCod_cr(sobreaviso.getCod_cr());
+                horaExtra.setJustificativa_lancamento(sobreaviso.getJustificativa_lancamento());
+                horaExtra.setNome_cliente(sobreaviso.getNome_cliente());
+                horaExtra.setProjeto(sobreaviso.getProjeto());
+                horaExtra.setUsername_aprovador(sobreaviso.getUsername_aprovador());
+                horaExtra.setUsername_lancador(sobreaviso.getUsername_lancador());
+                horaExtra.setTipo(sobreaviso.getTipo());
+                horaExtra.setStatus_aprovacao(sobreaviso.getStatus_aprovacao());
+                horaExtra.setSolicitante(sobreaviso.getSolicitante());
+
+                // Formata as strings de inicioAcionamento e fimAcionamento
+                String dtInicioAc = inicioAcionamento.toString();
+                String dtFimAc = fimAcionamento.toString();
+
+                // Obtém os valores de hora e minuto de inicio (campos de entrada)
+                int hora_inicio = horaInicio.getValue();
+                int min_inicio = minutoInicio.getValue();
+
+                // Formata as strings de hora_inicio e min_inicio
+                String hora_inicioS = Integer.toString(hora_inicio);
+                String min_inicioS = Integer.toString(min_inicio);
+
+                if (min_inicioS.length() < 2) {
+                    min_inicioS = "0" + min_inicioS;
+                }
+                if (hora_inicioS.length() < 2) {
+                    hora_inicioS = "0" + hora_inicioS;
+                }
+
+                // Concatena as strings de hora e minuto iniciais
+                hora_inicioS = hora_inicioS + ":" + min_inicioS + ":00";
+
+                // Concatena as strings de data de inicio e hora de inicio
+                String data_hora_inicio = dtInicioAc + " " + hora_inicioS;
+
+                // Preenche a data e a hora de inicio no objeto horaExtra
+                horaExtra.setData_hora_inicio(data_hora_inicio);
+
+                // Obtém os valores de hora e minuto de fim (campos de entrada)
+                int hora_fim = horaFim.getValue();
+                int min_fim = minutoFim.getValue();
+
+                // Formata as strings de hora_fim e min_fim
+                String hora_fimS = Integer.toString(hora_fim);
+                String min_fimS = Integer.toString(min_fim);
+                if (min_fimS.length() < 2) {
+                    min_fimS = "0" + min_fimS;
+                }
+                if (hora_fimS.length() < 2) {
+                    hora_fimS = "0" + hora_fimS;
+                }
+
+                // Concatena as strings de hora e minuto finais
+                hora_fimS = hora_fimS + ":" + min_fimS + ":00";
+
+                // Concatena as strings de data de inicio e hora finais
+                String data_hora_fim = dtFimAc + " " + hora_fimS;
+
+                // Preenche a data e a hora de fim no objeto horaExtra
+                horaExtra.setData_hora_fim(data_hora_fim);
+
+                int resultInicio = horaExtra.getData_hora_inicio().compareTo(sobreaviso.getData_hora_inicio());
+                int resultFim = horaExtra.getData_hora_fim().compareTo(sobreaviso.getData_hora_fim());
+                int resultHoraExtra = horaExtra.getData_hora_inicio().compareTo(horaExtra.getData_hora_fim());
+
+                // Verifica se a hora-extra informada está dentro do intervalo de sobreaviso
+                if (resultInicio >= 0 && resultFim <= 0) {
+                    if (resultHoraExtra < 0) {
+
+                        boolean conflito = false;
+                        for (Hora horaExistente : lantemp) {
+                            Timestamp inicio = horaExistente.getData_hora_inicio();
+                            Timestamp fim = horaExistente.getData_hora_fim();
+
+                            int resultIniIni = horaExtra.getData_hora_inicio().compareTo(inicio);
+                            int resultFimFim = horaExtra.getData_hora_fim().compareTo(fim);
+                            int resultIniFim = horaExtra.getData_hora_inicio().compareTo(fim);
+                            int resultFimIni = horaExtra.getData_hora_fim().compareTo(inicio);
+
+                            if ((resultIniIni > 0 && resultIniFim < 0)
+                                    || (resultFimIni > 0 && resultFimFim < 0)
+                                    || (resultIniIni < 0 && resultFimFim > 0)
+                                    || resultIniIni == 0 || resultFimFim == 0) {
+                                conflito = true;
+                                break;
+                            }
+                        }
+
+                        if (!conflito) {
+                            horaExtra.setTipo(TipoHora.EXTRA.name());
+                            horaExtra.setId(lantemp.size() + 1);
+                            contagem++;
+                            lantemp.add(horaExtra);
+                            carregarTabelaAcionamento();
+                        } else {
+                            Alert alert = new Alert(Alert.AlertType.ERROR);
+                            alert.setTitle("Conflito de horas");
+                            alert.setHeaderText(null);
+                            alert.setContentText("A hora informada está em conflito com uma hora já adicionada.");
+                            alert.showAndWait();
+                        }
+                    } else {
+                        Alert alert = new Alert(Alert.AlertType.ERROR);
+                        alert.setTitle("Hora-extra incompatível");
+                        alert.setHeaderText(null);
+                        alert.setContentText("O início da hora-extra deve ser antes do fim");
+                        alert.showAndWait();
+                    }
+                } else {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Hora-extra fora do intervalo");
+                    alert.setHeaderText(null);
+                    alert.setContentText("A hora-extra informada precisa estar dentro do intervalo de data do sobreaviso.");
+                    alert.showAndWait();
+                }
+            }
+        }
+</code></pre>
+    </details>
+</ul>
+
+<h2 id="api3">Sistema de lançamento de horas-extras e sobreavisos web</h2>
 
 <h3>Descrição</h3>
 
