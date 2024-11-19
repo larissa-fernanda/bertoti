@@ -23,6 +23,7 @@
     <li><a href="#api1">Projeto 1: Sistema de avaliação 360º</a></li>
     <li><a href="#api2">Projeto 2: Sistema de lançamento de horas-extras e sobreavisos desktop</a></li>
     <li><a href="#api3">Projeto 3: Sistema de lançamento de horas-extras e sobreavisos web</a></li>
+    <li><a href="#api4">Projeto 4: Sistema de cadastro e atualização de parceiros</a></li>
 </ul>
 
 <h2 id="api1">Sistema de avaliação 360º</h2>
@@ -1694,9 +1695,277 @@ Atuei como desenvolvedora full-stack. A seguir, estão listadas as minhas contri
     <li> Utilizado para controle de versão do código-fonte. Git é um sistema de controle de versão distribuído que permite rastrear alterações no código, colaborar com outros desenvolvedores e gerenciar o histórico de desenvolvimento do projeto.</li></details>
 </ul>
 
+<h2 id="api4">Sistema de cadastro e atualização de parceiros</h2>
 
-<h3>Soft Skills</h3>
+<h3>Descrição</h3>
 
-<details>
-    <summary></summary>
-</details>
+<p align="justify">Este projeto foi desenvolvido em parceria com a empresa Oracle. O objetivo era criar uma aplicação web que permitisse cadastrar e gerenciar empresas parceiras da Oracle. A aplicação foi desenvolvida em Java, utilizando o framework Spring Boot e o banco de dados Mysql. Para o front-end, foi utilizado o Vue.js, com HTML e CSS.</p>
+
+<p align="justify">A empresa parceira possuía dificuldades no controle e gestão das empresas parceiras, possuindo pouca visibilidade dos dados e processos relacionados a essas empresas. A aplicação desenvolvida permitiu a centralização das informações, facilitando o cadastro, atualização e consulta das empresas parceiras, além da visualização gráfica dessas informações.</p>
+
+<h3>Contribuições Individuais</h3>
+<p align="justify">Atuei como Scrum-Master e desenvolvedora full-stack. A seguir, estão listadas as minhas contribuições para o projeto:</p>
+
+<ul>
+    <details>
+        <summary>Criação da entidade OpnTrack</summary>
+        <p align="justify">Criei a entidade <code>OpnTrack</code> no Java. A entidade representava as informações relacionadas às trilhas de parceiros da Oracle, como nome, status e data de criação. A entidade foi mapeada para uma tabela no banco de dados Mysql, permitindo o armazenamento e consulta dos dados.</p>
+        <pre>
+        <code>
+        @Entity
+        @Data
+        @NoArgsConstructor
+        @AllArgsConstructor
+        @EqualsAndHashCode
+        @Table(name = "opn_track")
+        public class OpnTrack {
+
+            @Id
+            @GeneratedValue(strategy = GenerationType.IDENTITY)
+            private Long id;
+
+            @Column(name = "name", nullable = true, length = 20)
+            private String name;
+
+            @Column(name = "opn_track_status", nullable = false, length = 20)
+            private Boolean opnTrackStatus;
+
+            @Column(name = "created_at")
+            private LocalDateTime createdAt;
+        }
+</code></pre>
+    </details>
+    <details>
+        <summary>Criação do repository OpnTrackRepository</summary>
+        <p align="justify">Criei o repository responsável pelo acesso aos dados da entidade <code>OpnTrack</code>. O repository permitia a realização de operações de consulta, inserção, atualização e exclusão de dados da entidade, utilizando métodos como <code>findAll</code>, <code>save</code> e <code>deleteById</code>.</p>
+        <pre>
+        <code>
+        public interface OpnTrackRepository extends JpaRepository <OpnTrack,Long>{
+            OpnTrack findByName(String name);   
+        }
+</code></pre>
+    </details>
+    <details>
+        <summary>Criação do DTO OpnTrackDTO</summary>
+        <p align="justify">Criei o DTO responsável por representar os dados da entidade <code>OpnTrack</code> na camada de apresentação. O DTO continha os atributos da entidade, juntamente com anotações de validação e exemplos de valores. Além disso, o DTO possuía um construtor que recebia uma entidade <code>OpnTrack</code> e preenchia os atributos correspondentes.</p>
+        <pre>
+        <code>
+        @AllArgsConstructor
+        @NoArgsConstructor
+        @Data
+        public class OpnTrackDTO {
+
+            @Schema(description = "ID da OPN Track", example = "123")
+            private Long id;
+
+            @Schema(description = "Nome da OPN Track", example = "CLOUD BUILD")
+            private String name;
+
+            @Schema(description = "Status da OPN Track", example = "true")
+            private Boolean opnTrackStatus;
+
+            @Schema(description = "Data de criação da OpnTrack", example = "2022-01-01T12:00:00")
+            private LocalDateTime createdAt;
+
+            public OpnTrackDTO(OpnTrack entity){
+                this.id = entity.getId();
+                this.name = entity.getName();
+                this.opnTrackStatus = entity.getOpnTrackStatus();
+                this.createdAt = entity.getCreatedAt();
+            }
+
+        }
+</code></pre>
+    </details>
+    <details>
+        <summary>Criação do service OpnTrackService</summary>
+        <p align="justify">Criei o service responsável pela lógica de negócio da entidade <code>OpnTrack</code>. O service continha métodos para realizar operações como consulta, inserção, atualização e exclusão de trilhas de parceiros, utilizando o repository correspondente. Além disso, o service realizava a conversão entre entidades e DTOs, garantindo a separação de responsabilidades.</p>
+        <pre>
+        <code>
+        @Service
+        public class OpnTrackService {
+            @Autowired
+            private OpnTrackRepository opnTrackRepository;
+
+            public OpnTrackDTO findOpnTrackById(Long id){
+                OpnTrack opnTrack = opnTrackRepository.findById(id).get();
+                return new OpnTrackDTO(opnTrack);
+            }
+
+            public Optional<OpnTrackDTO> findOpnTrackByName(String name){
+                OpnTrack opnTrack = opnTrackRepository.findByName(name);
+                return Optional.ofNullable(opnTrack).map(OpnTrackDTO::new);
+            }
+
+            public Page<OpnTrackDTO> findAllOpnTracks(Pageable pageable){
+                Page<OpnTrack> opnTracks = opnTrackRepository.findAll(pageable);
+                return opnTracks.map(OpnTrackDTO::new);
+            }
+
+            public OpnTrackDTO insertOpnTrack(OpnTrackDTO opnTrackDTO){
+                if (opnTrackDTO.getName() == null || opnTrackDTO.getName().isBlank()){
+                    throw new RuntimeException("O nome da OPN Track é obrigatório");
+                }
+
+                OpnTrack opnTrack = new OpnTrack();
+                copyDTOtoEntity(opnTrackDTO, opnTrack);
+
+                opnTrack = opnTrackRepository.save(opnTrack);
+
+                return new OpnTrackDTO(opnTrack);
+
+            }
+
+            public OpnTrackDTO updateOpnTrack(Long id, OpnTrackDTO opnTrackDTO){
+                OpnTrack opnTrack = opnTrackRepository.findById(id).orElseThrow(
+                    () -> new RuntimeException("OPN Track não encontrada com o id: " + id)
+                    );
+                copyDTOtoEntity(opnTrackDTO, opnTrack);
+                opnTrack = opnTrackRepository.save(opnTrack);
+                return new OpnTrackDTO(opnTrack);
+            }
+
+            public void disableOpnTrack(Long id){
+                OpnTrack opnTrack = opnTrackRepository.findById(id).orElseThrow(
+                    () -> new RuntimeException("OPN Track não encontrada com o id: " + id)
+                    );
+                opnTrack.setOpnTrackStatus(false);
+                opnTrackRepository.save(opnTrack);
+            }
+
+            public void enableOpnTrack(Long id){
+                OpnTrack opnTrack = opnTrackRepository.findById(id).orElseThrow(
+                    () -> new RuntimeException("OPN Track não encontrada com o id: " + id)
+                    );
+                opnTrack.setOpnTrackStatus(true);
+                opnTrackRepository.save(opnTrack);
+            }
+
+            private void copyDTOtoEntity(OpnTrackDTO opnTrackDTO, OpnTrack opnTrack){
+                opnTrack.setName(opnTrackDTO.getName());
+                opnTrack.setOpnTrackStatus(opnTrackDTO.getOpnTrackStatus());
+                opnTrack.setCreatedAt(LocalDateTime.now());
+            }
+        }
+</code></pre>
+    </details>
+    <details>
+        <summary>Criação do controller OpnTrackController</summary>
+        <p align="justify">Criei o controller responsável por definir as rotas da entidade <code>OpnTrack</code>. O controller continha métodos para realizar operações como consulta, inserção, atualização e exclusão de trilhas de parceiros, utilizando o service correspondente. Além disso, o controller definia as anotações de mapeamento de rotas, operações suportadas e respostas esperadas.</p>
+        <pre>
+        <code>
+        @RestController
+        @RequestMapping(value = "/opntrack")
+        public class OpnTrackController {
+
+            @Autowired
+            private OpnTrackService opnTrackService;
+
+            @GetMapping
+            @Operation(summary = "OpnTrack", description = "Get all OpnTracks")
+            @ApiResponses(value = {
+                @ApiResponse(
+                    responseCode = "200",
+                    content = @Content(
+                        array = @ArraySchema(
+                            schema = @Schema(implementation = OpnTrack.class)
+                        )
+                    ),
+                    description = "OpnTracks retrieved"
+                ),
+                @ApiResponse(responseCode = "404", description = "OpnTracks not found")
+            })
+            public ResponseEntity<Page<OpnTrackDTO>> getAllOpnTracks(Pageable pageable) {
+                Page<OpnTrackDTO> opnTracks = opnTrackService.findAllOpnTracks(pageable);
+                return new ResponseEntity<>(opnTracks, HttpStatus.OK);
+            }
+
+            @GetMapping(value = "/{id}")
+            @Operation(summary = "Find OpnTrack by ID", description = "Get an OpnTrack by its ID")
+            @ApiResponses(value = {
+                @ApiResponse(
+                    responseCode = "200",
+                    description = "Successful operation",
+                    content = @Content(
+                        schema = @Schema(implementation = OpnTrack.class)
+                    )
+                ),
+                @ApiResponse(
+                    responseCode = "404",
+                    description = "OpnTrack not found"
+                )
+            })
+            public ResponseEntity<OpnTrackDTO> getOpnTrackById(@PathVariable Long id){
+                OpnTrackDTO opnTrackDTO = opnTrackService.findOpnTrackById(id);
+                if (opnTrackDTO != null){
+                    return new ResponseEntity<>(opnTrackDTO, HttpStatus.OK);
+                } else {
+                    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                }
+            }
+
+            @PostMapping
+            @Operation(summary = "Insert OpnTrack", description = "Insert a new OpnTrack")
+            @ApiResponses( value = {
+                @ApiResponse(
+                    responseCode = "201",
+                    description = "OpnTrack inserted",
+                    content = @Content(
+                        schema = @Schema(implementation = OpnTrackDTO.class)
+                    )
+                ),
+                @ApiResponse(
+                    responseCode = "400",
+                    description = "OpnTrack already exists"
+                )
+            })
+            public ResponseEntity<OpnTrackDTO> insertOpnTrack(@RequestBody OpnTrackDTO opnTrackDTO){
+                Optional<OpnTrackDTO> optionalOpnTrack= opnTrackService.findOpnTrackByName(opnTrackDTO.getName());
+                if (optionalOpnTrack.isPresent()){
+                    return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+                }
+                opnTrackDTO = opnTrackService.insertOpnTrack(opnTrackDTO);
+                URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+                        .buildAndExpand(opnTrackDTO.getId()).toUri();
+                return ResponseEntity.created(uri).body(opnTrackDTO);
+            }
+
+            @PutMapping(value = "/{id}")
+            @Operation(summary = "Update OpnTrack", description = "Update an existing OpnTrack")
+            @ApiResponse(
+                responseCode = "200",
+                description = "OpnTrack updated",
+                content = @Content(
+                    schema = @Schema(implementation = OpnTrackDTO.class)
+                )
+            )
+            public ResponseEntity<OpnTrackDTO> updateOpnTrack(@PathVariable Long id, @RequestBody OpnTrackDTO opnTrackDTO){
+                opnTrackDTO = opnTrackService.updateOpnTrack(id, opnTrackDTO);
+                return new ResponseEntity<>(opnTrackDTO, HttpStatus.OK);
+            }
+
+            @DeleteMapping(value = "/{id}")
+            @Operation(summary = "Disable OpnTrack", description = "Disable an existing OpnTrack")
+            @ApiResponse(
+                responseCode = "204",
+                description = "OpnTrack disabled"
+            )
+            public ResponseEntity<Void> disableOpnTrack(@PathVariable Long id){
+                opnTrackService.disableOpnTrack(id);
+                return ResponseEntity.noContent().build();
+            }
+
+            @PutMapping(value = "/{id}/enable")
+            @Operation(summary = "Enable OpnTrack", description = "Enable an existing OpnTrack")
+            @ApiResponse(
+                responseCode = "204",
+                description = "OpnTrack enabled"
+            )
+            public ResponseEntity<Void> enableOpnTrack(@PathVariable Long id){
+                opnTrackService.enableOpnTrack(id);
+                return ResponseEntity.noContent().build();
+            }
+        }
+</code></pre>
+    </details>
+</ul>
