@@ -9,7 +9,11 @@
 </ul>
 
 <h2 id="sobre_mim">Sobre mim</h2>
-<p>Atualmente, atuo como Engenheira de Dados na Quero Educação, EdTech brasileira, onde sou responsável por manter pipelines de dados e desenvolver soluções para o time de BI. Além disso, sou estudante de Banco de Dados na FATEC São José dos Campos.</p>
+<p align="justify">
+    Atualmente, atuo como Engenheira de Dados na Zarp.AI, uma empresa de consultoria em banco de dados brasileira. 
+    Comecei minha carreira como estagiária em Engenharia de Dados na Quero Educaçao, EdTech brasileira, onde me tornei júnior. 
+    Como Engenheira de Dados, sou responsável por manter pipelines de dados e desenvolver soluções para clientes, dentro ou fora da empresa. 
+    Além disso, sou estudante de Banco de Dados na FATEC São José dos Campos.</p>
 
 <h1 id="contato">Contato</h1>
 <ul>
